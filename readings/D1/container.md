@@ -48,5 +48,10 @@ start
 6. Docker opens up port 8080 on localhost and forwards to port 80 in the container
 7. Starts the container by using the CMD in the image's Dockerfile
 
+## LifeCycle of a Docker Container
+There is a nice visualization of the life cycle of a Docker container that can be found [here][lifecyle].
+
+
+[lifecyle]: https://medium.com/@nagarwal/lifecycle-of-docker-container-d2da9f85959
 ## Additional Resources:
 - [Docker Quick Start](https://medium.freecodecamp.org/docker-quick-start-video-tutorials-1dfc575522a0)
