@@ -11,7 +11,7 @@ Not long ago, containers as a technology were only available at tech giants such
 
 `This is it. Containers are the next once-in-a-decade shift in infrastructure and process that will make or break you` - Bret Fisher (A Docker Captain)
 
-Docker was founded in 2010 by Solomon Hykes. Docker built partnerships with technology giants including Microsoft and Google and in Cluster HQ’s Container Market Adoption Survey 2016 94% of the respondents said that they use Docker. Based on previously available open source technologies Docker created a standard way to deploy Linux applications into containers which then can run in different environments. 
+Docker was founded in 2010 by Solomon Hykes and at that time it was called dotCloud, Inc. DotCloud, Inc was originally built to run as a PaaS (Platform as a Service) type of business, similar to Heroku. Docker built partnerships with technology giants including Microsoft and Google and in Cluster HQ’s Container Market Adoption Survey 2016 94% of the respondents said that they use Docker. Based on previously available open source technologies Docker created a standard way to deploy Linux applications into containers which then can run in different environments. 
 
 Everyone has seen the adorable whale logo, named Moby Dock, representing Docker - but Docker's official mascot is actually[Gordon the Turtle](https://twitter.com/gordontheturtle?lang=en). 
 

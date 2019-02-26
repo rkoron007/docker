@@ -37,6 +37,8 @@ To start installing Docker visit Dockerhub for the official Docker [download][in
 
 After you have installed Docker we recommend installing the Docker Command-line completion for Docker Compose[here][compose-completion] and for Docker Machine [here][machine-completion]. The command line completion is always helpful while learning new docker commands as a reminder of what you can input into those commands.  
 
+Once you've installed the above tools run the command `docker --version` in your terminal. If everything is setup correctly this command returns information about the current Docker server version running in the background. Meaning you are all set if this works! If you ever need more information about the specifics of the resources Docker is currently using you can use the `docker info` command. 
+
 [mac-docs]: https://docs.docker.com/docker-for-mac/
 [install-mac-docs]: https://docs.docker.com/docker-for-mac/install/
 [compose-completion]: https://docs.docker.com/compose/completion/

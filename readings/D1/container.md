@@ -2,10 +2,10 @@
 
 
 ## Overview
-The smallest definition of a container is that it is an instance of an image running as a process on your machine. 
+Even in the beginning of your software engineering careers we've all heard the famous "but it worked on my machine!". Docker solves this porblem easily by ensuring that Docker containers give us the same environment on all machines. The smallest definition of a container is that it is an instance of an image running as a process on your machine. 
 
-## Images vs. Containers
-An image is the application we want to run. Example of familiar applications we'd want to run in a container are [Node][node], [Ruby][ruby] or [Postgres][postgres-docker]. We'll be talking a lot more about images later but if you'd like to peruse some for now feel free to visit the image hosting "registry" [DockerHub][dockerhub]. 
+## Docker Images
+All containers are started by running a **docker image**. An image is the application we want to run. Example of familiar applications we'd want to run in a container are [Node][node], [Ruby][ruby] or [Postgres][postgres-docker]. A docker image can consist of a collection of files, libraries, and dependencies. We'll be talking a lot more about images later but if you'd like to peruse some for now feel free to visit the image hosting "registry" [DockerHub][dockerhub]. 
 
 [postgres-docker]: https://hub.docker.com/_/postgres
 [ruby]: https://hub.docker.com/_/ruby
@@ -13,6 +13,8 @@ An image is the application we want to run. Example of familiar applications we'
 [dockerhub]: https://hub.docker.com/
 
 ## Running a Container
+Containers are runtime environments. You usually run one main process in one Docker container. You can think of this like one Docker container provides one service in your project. For example you can start one container to be your Mongo database and start another container to be your Node server and then you connect the two to be your project setup. 
+
 
 ```ssh
 docker container run -d --port 8080:80 --name web nginx

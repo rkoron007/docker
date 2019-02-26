@@ -1,3 +1,33 @@
+
+## Learning Goals
+- Know How to Create, Stop, and Remove Containers
+- Know How to Create Networks
+- Know how to Create Containers with Network and Environment Variables
+- Knowledge of how to Pull Down and Utilize Different Images in your Containers
+- Know how to Create Custom Images
+- Building a Dockerfile in Order to Create an Image
+
+## Phase 0: Starting Some Containers
+
+Start off by booting up some containers
+
+## Phase 1: The Shell Within
+
+Looking at a container from the outside can be interesting but by now you must be wondering if its possible to see what is happening ***inside*** a container? Which is totally possible using the `Docker CLI`(Command Line Interface). 
+
+```bash
+docker container run -it
+```
+
+The `-it`  is actually two separate flags you are adding to docker:
+* `-t` - simulates a terminal (like what SSH does`)
+* `-i` - keeps a session open to receive terminal input
+
+
+## Creating a Dockerfile
+
+At some point in the future you'll find yourself wanting to build your own images. Dockerfile is just a text file. Docker build will build your image 
+
 ## Networking with Containers
 
 • Use different Linux distro containers to check curl cli tool
@@ -21,3 +51,5 @@ give them an additional DNS name to respond to
 • Run alpine nslookup search with --net to see the two
 containers list for the same DNS name
 • Run centos curl -s search:9200 with --net multiple times until you see both "name" fields show
+
+@@

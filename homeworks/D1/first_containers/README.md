@@ -19,7 +19,14 @@ For each of the following containers make sure you are running `--detach` or `-d
 
 Using `docker container inspect mysql` you should now be able to see the password you set under the "Env" key.
 
-Now you can go to the two ports you locally set for `nginx` (`http://localhost:80`) and for `httpd` (`http://localhost:YOURPORT`)and be able to see if your containers are running!
+The `nginx` and `httpd` images are built so that if you travel to the exposed port on your local machine you'll be able to see a response.
+Check that your `nginx` container is running properly by doing either of the following:
+
+1. `curl localhost:80` in your terminal
+2. using your browser to navigate to `http://localhost:80`
+
+
+Do the same for `httpd` on whatever local port you chose to expose. You should see a message from both of those ports and therefore you'll know your containers are running!
 
 When you run `docker container ls -a` you should see something like this:
 
