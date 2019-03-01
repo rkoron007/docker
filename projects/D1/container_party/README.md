@@ -53,8 +53,20 @@ What happens if you try to `curl` something from this container? This `notliketh
 💡**Aside**: Using the Ubuntu image vs. the Whole Ubuntu OS? If you have Linux experience, or are currently running Docker through a Linux distribution you might be asking what happens when you run a Ubuntu container? How is it different from the Ubuntu OS already running on your computer? You'll notice that the "distribution based images" like Ubuntu, Debian, CentOS, Alpine, etc. are all **very** small, at most a few hundred MB. These images are not full OS's but just the base utilities that you would expect if you were running that full OS. Mostly they are just used as the image to be used when building `FROM` a Dockerfile. These images are used commonly so that you can use the built in package managers (`apt` or `yum`) and get the same package versions you'd expect if using the full OS.
 
 
+## Phase 1: Networks
 
-## Phase 1: Persistent Data in Docker
+## Assignment: DNS Round Robin Test
+• Ever since Docker Engine 1.11, we can have multiple containers
+on a created network respond to the same DNS address
+• Create a new virtual network (default bridge driver)
+• Create two containers from elasticsearch:2 image
+• Research and use --net-alias search when creating them to
+give them an additional DNS name to respond to
+• Run alpine nslookup search with --net to see the two
+containers list for the same DNS name
+• Run centos curl -s search:9200 with --net multiple times until you see both "name" fields show
+
+## Phase 2: Persistent Data in Docker
 
 
 ### Part A: Volumes
@@ -64,8 +76,11 @@ What happens if you try to `curl` something from this container? This `notliketh
 
 
 
+## Phase 3: Voting App
 
-## Phase 3: Creating Images
+
+
+## Phase 4: Creating Images
 
 ## Creating a Dockerfile
 

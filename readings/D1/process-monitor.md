@@ -19,5 +19,4 @@ The `docker container top` command will present you with a list of all the proce
 PID                 USER                TIME                COMMAND
 8800                root                0:00                nginx: master process nginx -g daemon off;
 8839                101                 0:00                nginx: worker process
-
 ```

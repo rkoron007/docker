@@ -22,6 +22,27 @@ A tag serves to map a descriptive, user-given name to any single image ID. An im
 
 In general if you see an image has an `alpine` tag version available it means it using the Linux distribution for `alpine` as it's base image. Remember that `Alpine` is an incredibly small distribution of Linux. The `alpine` version of images are popular for development because they take up less memory. 
 
+## Pulling Images
+Good news! You already have experience pulling images from Docker Hub. When running a container you always have to pass an image:
+
+```ssh
+ docker container run nginx
+```
+
+This command will first search for that image in the local image cache and it doesn't find it, Docker Hub will be searched. You can additionally pull down an image without running a container by using the `docker pull <IMAGENAME>` command. To see a list of all the images currently on your computer use the `docker image ls` command.
+
+
+## Pushing to DockerHub
+
+Pushing up Docker Images is just as easy as pushing up to Github. You must have an account on [`Docker Hub`][dockerhub] and the in your CLI can use the command `docker login`, which will default log you in to Docker Hub, then put in your credentials to log into your Docker Hub account. If you are using a machine you don't trust make sure to use the `docker logout` command at the end of your session. 
+
+Once you've logged in make sure you image is tagged properly, it it is your image the format is `<USERNAME>/<IMAGENAME>`. You can use the `docker image tag <IMAGENAME> <USERNAME>/<IMAGENAME>` command to re-tag preexisting images (even ones that you didn't make). Then you can use `docker image push <IMAGENAME>`. Check out your Docker Hub page and you should see your new image repository! 🌈
+
+### Creating a Private Image Repository
+At some point you may find yourself needing to make a private image for work or your own projects. The easy way to do this is to go onto [`Docker Hub`][dockerhub] and create and name a private image repository. Then you can follow the instructions and `docker image push` and tag your image with the same name as the repository you created. 
+
+![Private-Repo](https://assets.aaonline.io/Docker/private-repo.png)
+[dockerhub]: https://hub.docker.com/
 
 
 [docker-hub]: https://hub.docker.com/
