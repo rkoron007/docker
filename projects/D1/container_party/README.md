@@ -56,15 +56,15 @@ What happens if you try to `curl` something from this container? This `notliketh
 ## Phase 1: Networks
 
 ## Assignment: DNS Round Robin Test
-• Ever since Docker Engine 1.11, we can have multiple containers
-on a created network respond to the same DNS address
-• Create a new virtual network (default bridge driver)
-• Create two containers from elasticsearch:2 image
-• Research and use --net-alias search when creating them to
-give them an additional DNS name to respond to
-• Run alpine nslookup search with --net to see the two
-containers list for the same DNS name
-• Run centos curl -s search:9200 with --net multiple times until you see both "name" fields show
+Let's try utilizing Docker containers and networks to create a small [Round-robin DNS][rr-dns]. Meaning that we want to have multiple containers on one network that can all respond to the same DNS address. Start off by creating a new virtual network. Before creating the next two containers you'll want to research the [`--net-alias`][alias] flag to make sure both containers will respond to the same alias.
+
+Now create two containers on that new network with the `elasticsearch:2` image and your `--net-alias`. Once done create another container with the same network and the  `alpine nslookup` image and finally ending with the name of your network alias. Finally run one more container- and this one will ve simple so we can `curl` the port that both of the `elasricsearch` containers have.  Run this net network on the same network and the image `centos curl -s <ALIASNAME>:9200`. Run this last container a couple of times and you will see JSON being returned from each `elasticsearch` container. Each `elasticsearch` container will have a randomly generated "name" so as you `curl` one then the other you will see the "name" change.
+
+Good job you made a small load balancer!
+
+
+[rr-dns]: https://en.wikipedia.org/wiki/Round-robin_DNS
+[alias]: https://docs.docker.com/v17.12/edge/engine/reference/commandline/run/
 
 ## Phase 2: Persistent Data in Docker
 
