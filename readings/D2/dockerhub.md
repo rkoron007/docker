@@ -20,7 +20,7 @@ A tag serves to map a descriptive, user-given name to any single image ID. An im
 
 **Note**: The `latest` Tag is the default tag applied if you do not define one in your `docker pull <IMAGENAME>` command. It is usually the most recent and stable version of an image. 
 
-In general if you see an image has an `alpine` tag version available it means it using the Linux distribution for `alpine` as it's base image. Remember that `Alpine` is an incredibly small distribution of Linux. The `alpine` version of images are popular for development because they take up less memory. 
+In general if you see an image has an `alpine` tag version available it means it using the Linux distribution for `alpine` as it's base image. `Alpine` is a small security-focused distribution of Linux. Like **super** small, it's only about 5MB in size. The `alpine` version of images are popular for development because of the fact that they take up less memory. 
 
 ## Pulling Images
 Good news! You already have experience pulling images from Docker Hub. When running a container you always have to pass an image:

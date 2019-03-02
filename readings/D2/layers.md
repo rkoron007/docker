@@ -22,6 +22,15 @@ Wait a second, some of these layers are "missing"?! I demand a refund! J.K. what
 
 [layer-find]:https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612
 
+### Building Images Locally
+Locally built images on a Docker host are treated slightly differently than images pulled in from another source. The generic content of an image built locally remains the same - it still is composed of metadata and layers. 
+
+However, when a layer is created during an image build on a local Docker host, an 'intermediate' image is created at the same time. Just like all other images, it has a metadata including the layer digests that are to be incorporated as part of the image, and its ID. Intermediate images aren't tagged with a name, but, they do have a 'Parent' key, which contains the ID of their parent image.
+
+The purpose of building images locally using intermediate images is to facilitate the use of Docker's `build cache`. The build cache is an important feature of the Docker platform, and is used to help the Docker Engine make use of pre-existing layer content, rather than regenerating the content over and over for an identical build command. 
+
+When a locally built image is pushed to a registry the intermediate layers aren't needed anymore because the image will no longer be rebuilt and that image. The image effectively becomes read-only, and the components that support the build cache are no longer required. Instead of the image ID, `<missing>` is inserted into the history output. 
+
 ## The Cache of Image Layers
 So as we saw above images are composed of layers and each layer has a hash associated with it. Layers are neat because they can be re-used by multiple images saving disk space and reducing time to build images while maintaining their integrity. We are never storing the same the layer more than twice in our image cache. 
 

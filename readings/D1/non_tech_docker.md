@@ -2,9 +2,9 @@
 
 ## What is Docker?
 
-Docker is an open-source project designed to make it easier to create, deploy, and run applications by using containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one pretty package. Meaning that a developer can rest assured that the application they ship out will run on any other Linux machine regardless of any customized settings that machine might have from their original machine. 
+Docker is an open-source project designed to make it easier to create, deploy, and run applications by using containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one pretty package. Meaning it’s not about your app. It’s not about what is inside your app to a large extent. Its about packaging, shipping and delivering your app in a standard way.
 
-Not long ago, containers as a technology were only available at tech giants such as Google, but nowadays containers are widely available and used at companies small and large. Major tech corporations down to small start ups use containers to simplify development, testing, deployment, and operation of their software.
+Not long ago, containers as a technology were only available at tech giants such as Google, but nowadays containers are widely available and used at companies small and large. Major tech corporations down to small start ups use containers to simplify development, testing, deployment, and operation of their software. 
 
 ## Docker History
 ![Whale](https://i2.wp.com/blog.docker.com/wp-content/uploads/2013/06/Docker-logo-011.png?resize=300%2C232&ssl=1)
