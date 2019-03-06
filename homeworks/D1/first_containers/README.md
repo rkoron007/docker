@@ -1,47 +1,72 @@
 # Let's Get Started with Docker!
 
-## Let's Run Some Containers
+## Running your first containers
 
+Now that you are taking your first steps towards becoming a Docker master we'll start with the always traditional "HelloWorld".
 
-For each of the following containers make sure you are running `--detach` or `-d` and naming each of them with `--name`. **Remember:** containers cannot listen on the same local ports! 
+Before starting, ensure that Docker is installed correctly and is ready to accept your commands. Type the following command in a new Terminal window:
 
-1. **Run one container with the `nginx` image**
-    - Have this container listening on `80:80`
-2. **Run one container with the `httpd (apache)` image**
-    * You'll find the exposed port within the container yourself for the `httpd` image 
-        - Start with looking at the [httpd][httpd] image on DockerHub. There you will find and click a link to the Dockerfile for the latest supported version of this image (which will be tagged `latest`) 
-        - Once you've followed the link you will be viewing the Dockerfile, we'll be covering Dockerfiles in a lot more detail tomorrow, but what you are specifically looking in this file is the command [`EXPOSE`][expose]. This is where you will find the port that `httpd` is listening for internally.
-        - Once you've found the port `httpd` exposes internally set up your container to run using the `p` flag with a localhost port and the exposed `httpd` internal port. 
-3. Run one container with the `mysql` image. 
-    -  Have this container listening on `3306:3306`
-    * One of the common environmental flag arguments passed to images of databases is the flag to set a password.  
-        - For this exercise you'll use the `--environment` or `-e` flag and pass in the password you'd like `mysql` to use when it sets itself up `MYSQL_ROOT_PASSWORD=<your-password>`.
-
-Using `docker container inspect mysql` you should now be able to see the password you set under the "Env" key.
-
-The `nginx` and `httpd` images are built so that if you travel to the exposed port on your local machine you'll be able to see a response.
-Check that your `nginx` container is running properly by doing either of the following:
-
-1. `curl localhost:80` in your terminal
-2. using your browser to navigate to `http://localhost:80`
-
-
-Do the same for `httpd` on whatever local port you chose to expose. You should see a message from both of those ports and therefore you'll know your containers are running!
-
-When you run `docker container ls -a` you should see something like this:
-
-```ssh
-CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                               NAMES
-0edb7e43d044        mysql               "docker-entrypoint.s…"   5 seconds ago        Up 4 seconds        0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
-d558d946c6a0        httpd               "httpd-foreground"       About a minute ago   Up About a minute   0.0.0.0:8080->80/tcp                httpd
-4b76779e1da6        nginx               "nginx -g 'daemon of…"   About a minute ago   Up About a minute   0.0.0.0:80->80/tcp                  nginx
+```
+$ docker -v
 ```
 
-### Time to Clean Up
-Nice job! Now let's clean all those containers up with `docker container stop` and `docker container rm` (both can accept multiple container names or container `ID`'s)
-Use `docker container ls -a` to ensure all your containers have been stopped and removed.
+If you get a version number and no error you are good to go! We'll start off by running a container based off the [`alpine`][alpine] image.  Alpine is a small distribution of Linux, that we'll be talking about more in the future but for now but we'll be using it for simple `echo` command.
 
-Congrats on booting up your first containers - you are on your way to becoming a part of the Docker community!
+Use the `docker container run` command, with the `alpine` image, and the command to `echo "Hello World"`.
 
-[httpd]: https://hub.docker.com/_/httpd
-[expose]: https://we-are.bookmyshow.com/understanding-expose-in-dockerfile-266938b6a33d
+When you run the above command for the first time, you should see an output in your Terminal window similar to this:
+
+```ssh
+Unable to find image 'alpine:latest' locally
+ 
+latest: Pulling from library/alpine
+ 
+2fdfe1cd78c2: Pull complete
+ 
+Digest: sha256:ccba511b...
+ 
+Status: Downloaded newer image for alpine:latest
+ 
+Hello World
+```
+
+That was easy! Let's try it again run - `docker container run alpine echo "Hello World"`. You'll see this time there is nothing but "Hello World" returned this time. That's because the image for `alpine` has already downloaded. You can see it using the `docker image ls` command. 
+
+```ssh
+REPOSITORY                              TAG                 IMAGE ID            CREATED             SIZE
+alpine                                  latest              caf27325b298        4 weeks ago         5.53MB
+```
+
+Now take a look at `docker container ls` and you shouldn't see you containers running. However if you look at `docker container ls -a` you'll see:
+
+```ssh
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                         PORTS                NAMES
+8924d558c494        alpine              "echo 'Hello World'"     3 minutes ago       Exited (0) 3 minutes ago              optimistic_chandrasekhar
+```
+
+The `exited` status means this container is no longer running. It's always a good idea to clean up containers you don't intend to use again. We can do that using `docker container rm <imageidORimagename>`. Once you've cleaned up that container make sure it's done by checking `docker container ls -a`.
+
+### Running a Process Inside a Container
+Nice! Let's try doing something a little more involved with our next container. This time we'll use another Linux distribution,  `centos`, because it has `ping` built into the image.
+
+So you'll run a container based off the `centos` image, we'll have it ping 5 times, so after the centos image add the command you'd like it to run  `ping -c 5 127.0.0.1`. It should ping right before your eyes before stopping:
+
+```ssh
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.168 ms
+64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.110 ms
+64 bytes from 127.0.0.1: icmp_seq=3 ttl=64 time=0.110 ms
+64 bytes from 127.0.0.1: icmp_seq=4 ttl=64 time=0.102 ms
+64 bytes from 127.0.0.1: icmp_seq=5 ttl=64 time=0.102 ms
+
+--- 127.0.0.1 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4130ms
+rtt min/avg/max/mdev = 0.102/0.118/0.168/0.026 ms
+```
+
+Now make sure to clean up your container using `docker container rm` and make sure they are gone using `docker container ls -a`.
+
+You've set up your first containers and ran them with a command. Congrats on booting up your first containers - you are on your way to becoming a part of the Docker community!
+
+[alpine]: https://en.wikipedia.org/wiki/Alpine_Linux
+[centos]: https://en.wikipedia.org/wiki/CentOS

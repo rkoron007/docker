@@ -1,10 +1,8 @@
+Hello Wold Container:
 
-The Commands to create the three containers are as follows:
+`docker container run alpine echo "Hello World"`
 
 
-1. `docker container run --name nginx -d -p 80:80 nginx`
+Ping Container:
 
-1. `docker container run --name httpd -d -p 8080:80 httpd`
-
-1. `docker container run --name mysql -d -p 3306:3306 --environment MYSQL_ROOT_PASSWORD=my-secret-pw mysql`
-
+`docker container run centos ping -c 5 127.0.0.1`
