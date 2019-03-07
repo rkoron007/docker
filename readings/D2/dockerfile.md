@@ -100,6 +100,7 @@ Step 2 : RUN mkdir -p /usr/src/app
  ---> 7184cc184ef8
 ```
 
+Be wary though! If you make a change in a Dockerfile once it's been built, Docker will see that change and then will **no longer use the cache** of image layers it had. That's why it is always good to put any layers you intend to change in the bottom of your Dockerfile. That way the beginning of your Dockerfile will be able to use the cache as much as possible.
 
 ## Logging in Dockerfiles
 Docker can handle all of our logging for us while building our images - we just need to tell it where to put those logs. You can use `stdout` and `stderr` in adding something like the following run command to your Dockerfile:

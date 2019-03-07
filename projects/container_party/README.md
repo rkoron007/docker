@@ -179,19 +179,7 @@ Just like that you have a small load balancer! Round-robin complete!
 ## Phase 4: Persistent Data in Docker
 As I’ve said before, Docker containers are not supposed to maintain any state. But what if we need state? In fact, some processes are inherently stateful, like a database. For example, a database needs to maintain all the files with data, as that’s a purpose of the database. If we store this data inside a container, when it’s is gone, so is the data. Additionally, we can’t share this data between multiple instances of the container.
 
-### Part A: Volumes
-Database upgrade with containers
-• Create a postgres container with named volume psql-data
-using version 9.6.1
-• Use Docker Hub to learn VOLUME path and versions needed to run
-it
-• Check logs, stop container
-• Create a new postgres container with same named volume
-using 9.6.2
-• Check logs to validate
-• (this only works with patch versions, most SQL DB's require manual command
-
-### Part B: Bind Mounts
+### Part A: Bind Mounts
 Bind mounts allow you to take a directory or individual file that exists on your machine (from herein called the Host, or Docker Host) and access that directory or file inside the running container. Any changes you make to the directory contents, or individual file will cause the file(s) to change on the Host machine.
 
 Start by running a fun named, detached, container based off the `nginx` image. 
@@ -202,10 +190,103 @@ $ docker container run -d --name DogsRGood nginx
 
 Cool now while that's running in the background let's enter the shell for nginx by utilizing the `exec` command you learned earlier and the `bash` command. Now that you are in your container do a quick `ls` and look around your file system. Looks pretty nice in here, be a shame if someone made a funny named directory. Too bad that's exactly what we are going to do!
 
-Exit out of the container and make a new directory on your local computer. I chose to name mine `rad`
+Exit out of the container and make a new directory on your local computer. Put at least one file in the directory you created, and add some text to that file. I made a directory named `temp` where I plan to copy the contents, including my  chosen directory named directory 'rad'.
 
 ```ssh
 $ mkdir rad
+$ touch rad/randomrad.txt
+$ echo "hello world" >> rad/randomrad.txt
+$ cat rad/randomrad.txt
+hello world
 ```
 
+Now let's mount this directory inside Docker, use a detached container with the `nginx` image, and look into the [bind mount][bind-m] docs to see examples of how to format your command. Use the `--mount` command for explicitly. You'll probably have a long command to enter, and with docker you can do multi-line commands like so:
 
+```ssh
+docker container run \
+    multiple lines can be done with slashes \
+    just like \
+    this
+```
+
+Now go bind mount that volume (use the `--mount` command with a `type`, `source`, and `target`). Make sure your target path is absolute from your root. You got this! Now to test you can enter that detached container using the `exec` command, the `-it` flag, and then hand it the command of `bash` to be executed. 
+
+```ssh
+root@d46d99c3a840:/# ls
+bin  boot  dev	etc  home  lib	lib64  media  mnt  opt	proc  rad  root  run  sbin  srv  sys  tmp  usr	var
+root@d46d99c3a840:/# cd rad
+root@d46d99c3a840:/rad# ls
+randomrad.txt
+root@d46d99c3a840:/rad# cat randomrad.txt
+hello world
+```
+
+Now let's change the file in the container, and then exit the container.
+
+```ssh
+root@d46d99c3a840:/rad# echo "hello localhost" >> randomrad.txt
+root@d46d99c3a840:/rad# exit
+```
+
+What happens when you look at that file on your localhost? It's changed! Same thing happens if we remove the file:
+
+```ssh
+root@d46d99c3a840:/rad# rm rad/randomrad.txt
+root@d46d99c3a840:/rad# exit
+~ ls -a rad
+.  ..
+```
+
+So bind mounts can be helpful in local development if you are constantly changing a file - but as we just saw they are way more security prone because any change on you localhost will effect the data in your container! This is why you'll usually want to be using a `docker volume`.
+
+### Part B: Docker Volumes
+Volumes have several advantages over bind mounts, here is a quick list as a reminder before you get started working with them:
+
+1. Volumes are easier to back up or migrate than bind mounts.
+1. You can manage volumes using Docker CLI commands or the Docker API.
+1. Volumes work on both Linux and Windows containers.
+1. Volumes can be more safely shared among multiple containers.
+1. Volume drivers allow you to store volumes on remote hosts or cloud providers, to encrypt the contents of volumes, or to add other functionality.
+1. A new volume’s contents can be pre-populated by a container.
+
+As we've gone over before- you are never supposed to change a container, just deploy and redeploy. For this next part of the project we'll be emulating a real life situation. What if you were working on a project with a Postgres database and a newer patch for that image came out with a security fix. You definitely want that new patch - but you also don't want to lose all your database data. So we'll utilize named volumes to carry the data from one container, stop that container, and then use that same named volume in a new container. 
+
+In short, we'll be updating a container from one version of Postgres to a newer patched version while maintaining the data in the database. Visit the Postgres image on [Docker Hub][dh-postgres] and find the `9.6.1` version of the image (**Hint**: you may have to look under the Tags tab.). There you'll find the `Dockerfile` for this image but what you are interested is the `VOLUME` command. The `VOLUME` command will tell you where this image keeps it's data, which is the data we'll want to save. 
+
+Create a detached container running the `9.6.1` version of the Postgres image, with a [named volume][name-volume] called `psql-data` pointing at the data inside the Postgres volume. Check the logs for this container and make sure the database has finished starting up, you should see this message:
+
+```ssh
+PostgreSQL init process complete; ready for start up.
+```
+
+Make sure a volume with the name you specified was created `docker volume ls`. Inspect the volume you created `docker volume inspect psql-data`. Now we'll put some data into the volume as a test to make sure it'll properly transfer between the two containers. Enter the Postgres container with the following command: 
+`docker container exec -it <YOUCONTAINERID> psql -U postgres`. Then once you are in postgres post the following in order to create a table:
+
+```sql
+    CREATE TABLE cats
+    (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR (255) NOT NULL,
+    );
+
+    -- cat seeding 
+    INSERT INTO
+    cats (name)
+    VALUES
+    ('Jet');
+```
+
+Test that the table worked correctly with a simple query to select all the information from the `cats` table. Awesome, now exit the container with `\q`, and then stop the container. Look at your volumes again `docker volume ls`.Your `psql-data` volume is still there!
+
+Now create a new detatched container with **the same named volume as before**, and a newer version of Postgres - `9.6.2`. Here's the final test! Check inside your database using `docker container exec -it <YOUCONTAINERID> psql -U postgres`. Is the table you created earlier still there? IF yes, then success! You upgraded a container while persisting the data!
+
+A quick not - this will only work for patch versions, most SQL databases require manual commands to upgrade
+to major versions, meaning it's a DB limitation not a container one.
+
+Amazing Job today! You've worked with different containers and their networks, persisted data through bind mounts and volumes, and gotten a lot more comfortable with container commands!
+
+
+
+[bind-m]: https://docs.docker.com/storage/bind-mounts/
+[name-volume]: https://success.docker.com/article/different-types-of-volumes
+[dh-postgres]: https://hub.docker.com/_/postgres
