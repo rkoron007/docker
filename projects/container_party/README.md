@@ -251,7 +251,7 @@ Volumes have several advantages over bind mounts, here is a quick list as a remi
 
 As we've gone over before- you are never supposed to change a container, just deploy and redeploy. For this next part of the project we'll be emulating a real life situation. What if you were working on a project with a Postgres database and a newer patch for that image came out with a security fix. You definitely want that new patch - but you also don't want to lose all your database data. So we'll utilize named volumes to carry the data from one container, stop that container, and then use that same named volume in a new container. 
 
-In short, we'll be updating a container from one version of Postgres to a newer patched version while maintaining the data in the database. Visit the Postgres image on [Docker Hub][dh-postgres] and find the `9.6.1` version of the image (**Hint**: you may have to look under the Tags tab.). There you'll find the `Dockerfile` for this image but what you are interested is the `VOLUME` command. The `VOLUME` command will tell you where this image keeps it's data, which is the data we'll want to save. 
+In short, we'll be updating a container from one version of Postgres to a newer patched version while maintaining the data in the database. Visit the Postgres image on [Docker Hub][dh-postgres] and find any of the `9.6` versions of the image (**Hint**: you may have to look under the Tags tab.). There you'll find the `Dockerfile` for this image but what you are interested is the `VOLUME` command. The `VOLUME` command will tell you where this image keeps it's data, which is the data we'll want to save. 
 
 Create a detached container running the `9.6.1` version of the Postgres image, with a [named volume][name-volume] called `psql-data` pointing at the data inside the Postgres volume. Check the logs for this container and make sure the database has finished starting up, you should see this message:
 
@@ -283,9 +283,7 @@ Now create a new detatched container with **the same named volume as before**, a
 A quick not - this will only work for patch versions, most SQL databases require manual commands to upgrade
 to major versions, meaning it's a DB limitation not a container one.
 
-Amazing Job today! You've worked with different containers and their networks, persisted data through bind mounts and volumes, and gotten a lot more comfortable with container commands!
-
-
+Amazing Job today! You've worked with different containers and their networks, persisted data through bind mounts and volumes, and gotten a lot more comfortable with container commands! Make sure you clean up any remaining containers by using the `docker container rm -f` command, as well as getting rid of any un-used volumes with `docker volume prune`.
 
 [bind-m]: https://docs.docker.com/storage/bind-mounts/
 [name-volume]: https://success.docker.com/article/different-types-of-volumes

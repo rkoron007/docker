@@ -12,13 +12,13 @@ All containers are started by running a **docker image**. An image is the applic
 [dockerhub]: https://hub.docker.com/
 
 ## LifeCycle of a Docker Container
-<!-- Docker containers are prepared to die at any time: you can stop, kill and destroy them quickly. And when you do kill a container, all data created during its existence is wiped out by default. It is in this sense that we could say containers, are ephemeral. By “ephemeral”, we mean that a container can be stopped and destroyed, then rebuilt and replaced with an absolute minimum set up and configuration. 
+Docker containers are prepared to die at any time: you can stop, kill and destroy them quickly. When you do kill a container, all data created during its existence is wiped out by default. It is in this sense that we could say containers, are ephemeral. By “ephemeral”, we mean that a container can be stopped and destroyed, then rebuilt and replaced with an absolute minimum set up and configuration. 
 
-Containers are perfect for temporal tasks and they can perfectly run long-running daemons like web servers or application servers. They can also be used for databases and persist data with native I/O performance through volumes. In fact, MongoDB, mySQL and Postgres are among the most popular images in the Docker Hub. By default, all containers are created equal; they all get the same proportion of CPU cycles and block IO, and they could use as much memory as they need. 
+Containers are perfect for temporal tasks and they can perfectly run long-running daemons like web servers. They can also be used for databases and persist data with native I/O performance through volumes. In fact, MongoDB, mySQL and Postgres are among the most popular images in the Docker Hub. By default, all containers are created equal; they all get the same proportion of CPU cycles and block IO, and they could use as much memory as they need. 
 
 Here is a visualization of the Docker Container Lifecycle:
 
-![GlidderLabs](https://assets.aaonline.io/Docker/GlidderLabs.png) -->
+![GlidderLabs](https://assets.aaonline.io/Docker/GlidderLabs.png)
 
 
 ## Running a Container
@@ -33,13 +33,13 @@ docker container run -d --port 8080:80 --name web nginx
 
 Let's break this command down into it's separate parts. 
 1. `docker container run` - is the command telling docker you want to start up a new container using the following options.
-1. `-d` - this flag means starting up the container in `detached` mode. Containers started in detached mode exit when the root process used to run the container exits.
-1. `--port 8080:80` - this is letting docker know that you want expose a port on your local machine and that any traffic on that port should route to the container IP. 
-  - The internal host IP is on the left: `8080`  
-  - The ip for the container is on the right: `80`
-  - With this configuration you can go to `http://localhost:8080` and see your container running!
-1. `--name web` - the name flag allows you to directly name a container
-1. `nginx` - the final part of this command is the image we want to use for running this container.
+2. `-d` - this flag means starting up the container in `detached` mode. Containers started in detached mode exit when the root process used to run the container exits.
+3. `--port 8080:80` - this is letting docker know that you want expose a port on your local machine and that any traffic on that port should route to the container IP. 
+    - The internal host IP is on the left: `8080`  
+    - The ip for the container is on the right: `80`
+    - With this configuration you can go to `http://localhost:8080` and see your container running!
+4. `--name web` - the name flag allows you to directly name a container
+5. `nginx` - the final part of this command is the image we want to use for running this container.
 
 
 [nginx]: https://hub.docker.com/_/nginx
