@@ -5,14 +5,17 @@
 In the words of Docker Inc. `Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.` As you learned in the Compose readings you can define a complex stack in one a file and have it running with a single command! No more separate tabs running commands for your database command and your front end command. No more defining containers by hand! The people at Docker choose to call this gift, Docker Compose.
 
 ### Workflow:
+Using Compose is basically a three-step process.
 
+1. Define your app's environment with a Dockerfile so it can be reproduced anywhere.
+2. Define the services that make up your app in `docker-compose.yml` so they can be run together in an isolated environment.
+3. Lastly, run `docker-compose up` and Compose will start and run your entire app.
 
 ## Phase 1: Flask and Redis
-# First Composition
 
 Time to take on your destiny and write some fantastic Docker Compose files! To start off today you'll be taking a very simple Flask and Redis application and creating a compose file to run it locally.  Start off by taking a look at the [skeleton][skeleton]. 
 
-## Docker-Compose File
+### Docker-Compose File
 Our Flask app will contain the following components:
 
 1. The Flask server that accepts user requests and stores the data in Redis.
@@ -20,7 +23,7 @@ Our Flask app will contain the following components:
 
 As we covered before, we don't want one container running both Python and Redis. Each container should be in charge we don't want to have both our Flask Server and our Redis database running in one container. We've provided you with the `Dockerfile` that will set up the Flask server for you. 
 
-**Quick Reminder - indention is how the YAML file formats group information, so indention is important.** Create a `docker-compose.yml` file. For the rest of this homework this is where you'll be working. As we previous learned `docker-compose` has many versions, for this project you will use version '3'. Take a look at the [compose documentation][docs] if you need a syntax reference.
+**Quick Reminder - indention is how the YAML file formats group information, so indention is important.** Create a `docker-compose.yml` file. For the rest of this phase this is where you'll be working. As we previous learned `docker-compose` has many versions, for this project you will use version '3'. Take a look at the [compose documentation][docs] if you need a syntax reference.
 
 Since we have two main parts in the current architecture for our application (server and database) we'll want to run two `services`: one for the Flask server, and one for the `redis` database. Create two `services`, one called `web` and the other called `redis`. For the future, a simple rule of thumb is to create one service for each image in your application.
 

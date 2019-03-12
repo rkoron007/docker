@@ -1,4 +1,8 @@
+FROM node:7.7.2-alpine
 
+WORKDIR /usr/app
 
-FROM nginx:alpine
-EXPOSE 80
+COPY package.json .
+RUN npm install --quiet
+
+COPY . .

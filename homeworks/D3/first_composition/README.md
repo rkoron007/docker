@@ -1,6 +1,6 @@
 # First Composition
 
-Time to take on your first Docker Compose file! Today you'll be taking a very simple Flask and Redis application and creating a compose file to run it locally.  Start off by taking a look at the [skeleton][skeleton]. 
+Time to take on your first Docker Compose file! You'll be working with a real life example of using WordToday you'll be taking a very simple Flask and Redis application and creating a compose file to run it locally.  Start off by taking a look at the [skeleton][skeleton]. 
 
 
 
