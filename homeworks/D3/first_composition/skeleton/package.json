@@ -1,0 +1,17 @@
+{
+    "name": "simple_node_server",
+    "version": "1.0.0",
+    "engines": {
+        "node": "7.10.0"
+    },
+    "scripts": {
+        "start": "node server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "4.15.3",
+        "pg": "6.2.2"
+    }
+}
