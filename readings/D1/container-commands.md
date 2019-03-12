@@ -1,5 +1,5 @@
 ## Common Docker Container Commands
-Since Docker started several years ago there are older and newer ways of running doing the same thing. In this course we'll be using the updated long form version of docker commands which will usually follow the format of ` docker <COMMAND> <SUBCOMMAND>`. A perfect example of this is `docker container(COMMAND) run(SUBCOMMAND)`. 
+Since Docker started several years ago there are older and newer ways of running doing the same thing. In this course we'll be using the updated long form version of docker commands which will usually follow the format of ` docker <COMMAND> <SUBCOMMAND>`. A perfect example of this is `docker container(COMMAND) run(SUBCOMMAND)`.  
 
 Here are the commands you'll find yourself running most often. We recommend also bookmarking this Docker [Cheatsheet][docker-cheat].
 
