@@ -1,0 +1,14 @@
+## Docker Compose Script
+- services - create a docker compose file with two different containers running
+  - show that they are colored are colored auto based on which container responds
+  - use `d` to run in the background
+  - `docker-compose logs`
+  -can still use `docker-compose ps` and `docker compose top`
+- Go over Compose locally
+- have a conpose file up
+- build an image in that compose file
+- show the volume persisting
+- use `docker compose up -d` 
+- use `docker compose up` and `down`
+- talk about it crafting a network for you
+- DNS resolution - since all these containers are on the same network you have resolution to the name of the service. 
