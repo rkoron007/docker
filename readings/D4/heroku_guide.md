@@ -1,9 +1,16 @@
 # Hosting using Docker and Heroku
 
-For hosting we'll be using the [`heroku container registry`][container]. 
+Now that you've created your images and can run your project locally it's time to use Heroku to host your images. For this purpose we'll be using the [`heroku container registry`][container]. Before getting started we'll quick talk about the difference between Heroku and Docker and what the Heroku Container Registry is actually doing.
 
-<!-- adding database and what this is doing -->
 
+## Heroku and Docker: Similar Concepts
+
+One of the major difference between Heroku and Docker is that Heroku abstracts the container away from the user and puts a sandbox up around what it can do.
+Heroku runs on `dynos` which can be described as a lightweight container running a single command. Instead of a `Dockerfile` Heroku’s uses BuildPacks. When you run a build on Heroku, the BuildPack creates a so called `Slug`. A slug is similar to an image, in that it contains all the dependencies and can be deployed and started in a very short time.
+
+So you run your BuildPack get a `slug`, and that `slug` can then be run on a `Dyno`. These are all very familiar concepts by now - your `Dockerfile` builds and `image` which can be run on a `container`. The biggest difference is Docker is open source great for local development where aas Heroku is primarily a `commercial service provider`. For our purposes we'll be deploying our own images to Heroku's `dyno`s in order to run your application.
+
+## Hosting Using the Container Registry
 
 The Registry will allow you to deploy your Docker images on Heroku. You'll deploy each of your custom images to a separate container on Heroku and those containers will together build your application. The steps to pushing up your image to Heroku will of course be different depending on the application you are trying to push up but we'll be covering your Heroku basic flow in this reading.
 
@@ -29,9 +36,9 @@ Dockerfile.frontend
 
 Then to build all of your images for Heroku you would run `heroku container:push --recursive` in the root directory of your project. This will build and push all the images necessary for your project to the container registry. The next step is to [release][release] your images using `heroku container:push release`. If you are using multiple images you will have to specify the names of the images to be released (these will be the endings on the Dockerfile you've just built). Using the above example of two Dockerfiles named `Dockerfile.web` and `Dockerfile.frontend` you would run the command `heroku container:release web frontend` to release both images after they had been previously built.
 
-Now if you have a datbase for your project you'll add it on as a Heroku [add-on][addons]. For example if I wanted to add a PostgreSQL database to my application I would go to the page for that add-on and then use the Heroku CLI to add it to my application `heroku addons:create heroku-postgresql`. 
+Now if you have a database, or require an extra service like `redis`, for your project you'll add it on as a Heroku [add-on][addons]. For example if I wanted to add a PostgreSQL database to my application I would go to the page for that add-on and then use the Heroku CLI to add it to my application `heroku addons:create heroku-postgresql`. Once you've setup your database if things don't look quite right you can always check out the `heroku logs` and reiterate through the `heroku container:push` and `heroku container:push release` phases until everything is configured properly. Make sure to use `heroku run` to run all your normal setup commands for a new project(such as seeding, or any other configuration needed).
 
-
+Once everything is done view your beautiful project and give yourself a huge pat on the back!!
 
 [container]: https://devcenter.heroku.com/articles/container-registry-and-runtime
 [release]: https://devcenter.heroku.com/articles/release-phase
