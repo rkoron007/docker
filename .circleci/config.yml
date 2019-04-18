@@ -1,8 +1,70 @@
-defaults: &defaults
-  # TODO: Replace working directory with current repo name
+defaults: &defaults # TODO: Replace working directory with current repo name
   working_directory: ~/docker-course
   docker:
     - image: circleci/node:10
+
+validate-populate: &validate-populate
+  <<: *defaults
+  steps:
+    - checkout
+
+    - attach_workspace:
+        at: ./
+
+    - run:
+        name: Validate
+        command: npx aa-validate
+
+    - run:
+        name: Populate
+        command: npx aa-populate
+
+    # Optionally, show populated files
+    - run:
+        name: Show populated files
+        command: cat .build/populated_task_groups.json
+
+    - run:
+        name: Parse
+        command: npx aa-parse
+
+    # Optionally, show parsed files
+    - run:
+        name: Show parsed files
+        command: cat .build/parsed_task_groups.json
+
+    - run:
+        name: Validate Templates
+        command: npx aa-validate-templates
+
+    - persist_to_workspace:
+        root: ./
+        paths:
+          - .build
+
+    - store_artifacts:
+        path: .build/errors.json
+
+deploy: &deploy
+  <<: *defaults
+  steps:
+    - attach_workspace:
+        at: ./
+
+    - run:
+        name: Deploy
+        command: npx aa-deploy
+
+    - run:
+        name: Store Deploy
+        command: npx aa-store-deploy
+
+    - run:
+        name: Analytics
+        command: npx aa-analytics
+
+    - store_artifacts:
+        path: .build/errors.json
 
 version: 2
 jobs:
@@ -10,18 +72,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-
-      - run:
-          name: Create Build profile
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]
-            then
-            echo 'export STAGE=production' >> $BASH_ENV
-            else
-            echo 'export STAGE=staging' >> $BASH_ENV
-            fi
-            # TODO: Replace CURRENT_REPO value with the current repo name
-            echo 'export CURRENT_REPO=docker-course' >> $BASH_ENV
 
       - run:
           name: Add NPM Token to npmrc
@@ -51,83 +101,55 @@ jobs:
             - .build
             - node_modules
 
-  validate-populate:
-    <<: *defaults
-    steps:
-      - checkout
+  validate-populate-staging:
+    <<: *validate-populate
 
-      - attach_workspace:
-          at: ./
+  validate-populate-production:
+    <<: *validate-populate
 
-      - run:
-          name: Validate
-          command: npx aa-validate
+  deploy-staging:
+    <<: *deploy
 
-      - run:
-          name: Populate
-          command: npx aa-populate
-
-      # Optionally, show populated files
-      - run:
-          name: Show populated files
-          command: cat .build/populated_task_groups.json
-
-      - run:
-          name: Parse
-          command: npx aa-parse
-
-      # Optionally, show parsed files
-      - run:
-          name: Show parsed files
-          command: cat .build/parsed_task_groups.json
-
-      - run:
-          name: Validate Templates
-          command: npx aa-validate-templates
-
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - .build
-
-      - store_artifacts:
-          path: .build/errors.json
-
-  deploy:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ./
-
-      - run:
-          name: Deploy
-          command: npx aa-deploy
-
-      - run:
-          name: Store Deploy
-          command: npx aa-store-deploy
-
-      - run:
-          name: Analytics
-          command: npx aa-analytics
-
-      - store_artifacts:
-          path: .build/errors.json
+  deploy-production:
+    <<: *deploy
 
 workflows:
   version: 2
   build_validate_deploy:
     jobs:
-      - build
-      - validate-populate:
+      - build:
+          context: npm-token-read
+      - validate-populate-staging:
+          context: course-deployment-staging
           requires:
             - build
-      - deploy:
+          filters:
+            branches:
+              ignore:
+                - master
+      - validate-populate-production:
+          context: course-deployment-production
+          requires:
+            - build
           filters:
             branches:
               only:
                 - master
+      - deploy-staging:
+          context: course-deployment-staging
+          filters:
+            branches:
+              only:
                 - staging
           requires:
             - build
-            - validate-populate
+            - validate-populate-staging
+      - deploy-production:
+          context: course-deployment-production
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build
+            - validate-populate-production
