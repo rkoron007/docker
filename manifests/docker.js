@@ -168,7 +168,7 @@ const courses = {
     },
     {
       name: "DNS Overview",
-      type: "Reading",
+      type: "ExternalResource",
       id: "94970693-a0a9-4282-b760-04b87e228288",
       href: "https://workshop.reclaimhosting.com/dns/dns-summary/",
       timeEstimate: "00:05:00",
