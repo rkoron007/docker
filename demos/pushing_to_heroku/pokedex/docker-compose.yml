@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   db:
     image: postgres
@@ -17,18 +17,13 @@ services:
       - db
     environment:
       DATABASE_URL: postgres://postgres@db
-    depends_on:
-      - db
   frontend:
-      build: 
-        context: .
-        dockerfile: Dockerfile.frontend
-      image: rkoron/pokedex-react
-      volumes:
-        - '.:/usr/src/app'
-        - '/usr/src/app/node_modules'
-      ports:
-        - "80:3000"
-      environment:
-        - NODE_ENV=development 
-  
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: rkoron/pokedex-react
+    volumes:
+      - ".:/usr/src/app"
+      - "/usr/src/app/node_modules"
+    environment:
+      - NODE_ENV=development

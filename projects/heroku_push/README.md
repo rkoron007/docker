@@ -1,6 +1,8 @@
 # Pushing to Heroku Using Docker
 
-Today you'll be continuing what you began last night! Pushing you projects up to the [Heroku Container Registry][heroku-container]. For each of your projects you'll create a `Dockerfile`, and a `docker-compose.yml` file. If you have completed a group project, then work with your group to create one `Dockerfile` and `docker-compose.yml` together. Your goal is to have someone be able to download your project from Github and then have it up and running using `docker-compose up` without having to download anything besides Docker.
+Today you'll be continuing what you began last night! Pushing your projects up to the [Heroku Container Registry][heroku-container]. For each of your projects you'll create a `Dockerfile`, and a `docker-compose.yml` file. Make sure to check out the `Example Docker Push to Heroku` to see an example of how we Dockerize and push a Rails/React application up to the Heroku Container Registry.
+
+If you have completed a group project, then work with your group to create one `Dockerfile` and `docker-compose.yml` together. Your goal is to have someone be able to download your project from Github and then have it up and running using `docker-compose up` without having to download anything besides Docker.
 
 Once you've setup your custom images and Compose file you'll then host your project using the [Heroku Container Registry][heroku-container]. You have the option of either changing your original Heroku site deployment or creating a new Heroku site for your Docker-ized deployment.
 

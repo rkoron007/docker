@@ -1,12 +1,14 @@
 ## Pushing to Heroku Example: Using Rails and React
 
-In this demo we'll be walking through how we Docker-ized an application and then deploy that application to the Heroku Container Registry. The application we'll be using for this demo will look pretty familiar - it's Pokedex! We'll walk through how we created Dockerfiles for the two main services in our application (rails and javascript) and what configuration changes we ended up making along the way.
+In this demo we'll be walking through how we Docker-ized an application and then deployed that application to the Heroku Container Registry. The application we'll be using for this demo will look pretty familiar - it's [Pokedex][pokedex]! We'll walk through how we created Dockerfiles for the two main services in our application (Rails and React) and what configuration changes we ended up making along the way.
+
+[pokedex]: https://s3-us-west-1.amazonaws.com/appacademy-open-assets/Docker/demos/pushing_to_heroku/pokedex.zip
 
 ## Running the Application Locally Using Docker
 
 ### Rails Dockerfile
 
-We'll start by building the Dockerfile for the Rails side of things. We used the [docker-compose][docker-c] guide to building a Rails Dockerfile as a general guide for this portion. We created a new file `entrypoint.sh` to fix Rails-specific issue that prevents the server from restarting when a certain `server.pid` file pre-exists:
+We'll start by building the Dockerfile for the Rails side of things. We used this [docker-compose][docker-c] guide to as our starting point to building a Rails Dockerfile. We created a new file `entrypoint.sh` to fix Rails-specific issue that prevents the server from restarting when a certain `server.pid` file pre-exists:
 
 ```sh
 #!/bin/bash
@@ -26,9 +28,8 @@ Then we went had to change our database configuration to make sure it would hook
 default: &default
   adapter: postgresql
   encoding: unicode
+  # Here we make sure we can pass the connection URL for the database
   url: <%= ENV['DATABASE_URL'] %>
-  # For details on connection pooling, see Rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
@@ -44,6 +45,7 @@ production:
   adapter: postgresql
   host: db
   username: postgres
+  # we don't need to specify a password
   password:
 ```
 
@@ -54,7 +56,8 @@ Finally we created our `Dockerfile`. Since this application will have more than 
 
 # We are going from the alpine version of ruby to save space
 FROM ruby:2.5.5-alpine3.9
-# We tell the image to not build a cache of things in our image
+
+# We tell the image `--no-cache` so we don't clog up our image with the things we are downloading
 RUN apk add --no-cache --update build-base \
   linux-headers \
   git \
@@ -88,7 +91,7 @@ CMD ["rails", "server", "-b", "0.0.0.0"]
 
 ### Node Dockerfile
 
-Then we need to create a Dockerfile to bundle our React code via Node. We'll call this file `Dockerfile.frontend`:
+Then we need to create a Dockerfile to bundle our React code with JavaScript. We'll call this file `Dockerfile.frontend`:
 
 ```dockerfile
 # Dockerfile.frontend
@@ -107,7 +110,8 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 # install and cache app dependencies
 COPY package.json /usr/src/app/package.json
-# silent so we don't have to watch the whole thing start
+
+# silent so we don't have to watch the whole thing download everytime
 RUN npm install --silent
 
 # Start application
@@ -122,42 +126,43 @@ Now we can use our nifty new Dockerfiles and make sure everything runs locally b
 
 ```yml
 # docker-compose.yml
-version: '3'
+version: "3"
 services:
   db:
     image: postgres
+    # set up a volume so our database info persists
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
   web:
+    # building our own docker image
     build:
       context: .
       dockerfile: Dockerfile.web
+    # name our image
     image: rkoron/pokedex-web
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
     depends_on:
+      # setting up a dependency on our database container
       - db
     environment:
       DATABASE_URL: postgres://postgres@db
-    depends_on:
-      - db
   frontend:
-      build:
-        context: .
-        dockerfile: Dockerfile.frontend
-      image: rkoron/pokedex-frontend
-      volumes:
-        - '.:/usr/src/app'
-        - '/usr/src/app/node_modules'
-      ports:
-        - "80:3000"
-      environment:
-        - NODE_ENV=development
+    # building our own docker image
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: rkoron/pokedex-frontend
+    volumes:
+      - ".:/usr/src/app"
+      - "/usr/src/app/node_modules"
+    environment:
+      - NODE_ENV=development
 ```
 
-Now we can run `docker-compose up -d` and see the application running on `http://localhost:3000/`. You will need to migrate and seed: `docker-compose run web rails db:migrate` & `docker-compose run web rails db:seed` and you should be up and running. Amazing! Now anyone can download this project and without having rails or node or anything they can run `docker-container up` and they'll have this project up and running.
+Now we can run `docker-compose up -d` and see the application running on `http://localhost:3000/` (it may take a minute for this to complete). You will then need to migrate and seed: `docker-compose run web rails db:migrate` & `docker-compose run web rails db:seed` and you should be up and running. Amazing! Now anyone can download this project and without having Rails or Node on their computer they can run `docker-compose up` and they'll have this project up and running.
 
 [docker-c]: https://docs.docker.com/compose/rails/
 
@@ -170,14 +175,14 @@ Once everything is working locally you know it's time to push to the [Heroku Con
 3. We'll then build and push up our images to the registry.
    - We can push up all our Dockerfiles and images by running: `heroku container:push --recursive -a {NAME_OF_HEROKU_APP}`
    - If you only wanted to push one of your Dockerfiles you can run: `heroku container:push {SERVICE_NAME} --recursive -a {NAME_OF_HEROKU_APP}`
-4. Release your now build Images to Containers on Heroku: `heroku container:release web frontend -a {NAME_OF_HEROKU_APP}`
-5. Now we'll need to add a database `Addon` for this application.
-   - On the dashboard for this Heroku application if you look under `Resources` you can search for `Add-on`s.
+4. Release your now built Images to Containers on Heroku: `heroku container:release web frontend -a {NAME_OF_HEROKU_APP}`
+5. Now we'll need to add a database `Addon` for our application.
+   - On the dashboard for this Heroku application if you look under the `Resources` tab you will see the ability to search for and add `Add-ons`.
      - Here is where you can add the `Heroku Postgres` database as an `Add-on` for this application
 6. Finally we have to migrate and seed our application:
    - Migrations: `heroku run rails db:migrate -a {NAME_OF_APP}`
    - Seeding: `heroku run rails db:seed -a {NAME_OF_APP}`
 
-And that is it! We can now use `heroku open` to be able to see the Pokedex application in all it's glory!
+And that is it! We can now use `heroku open` to be able to see the Pokedex application in all it's glory! If you run into any troubles while you are following this guide feel free to check the `heroku logs` for your application.
 
 [register]: https://devcenter.heroku.com/articles/container-registry-and-runtime
