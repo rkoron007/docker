@@ -474,6 +474,16 @@ const courses = {
       subtopicId: "homeworks"
     },
     {
+      name: "Example Docker Push to Heroku",
+      type: "Reading",
+      id: "16a0a715-b384-470a-89ec-81ab6190d4a2",
+      repo: "docker-course",
+      path: "demos/pushing_to_heroku/README.md",
+      timeEstimate: "00:30:00",
+      topicId: "four",
+      subtopicId: "additional resources"
+    },
+    {
       name: "Pushing to Heroku Continued",
       type: "Reading",
       id: "365ed346-3bb0-41c4-8e70-cfbfb53ab2b5",
