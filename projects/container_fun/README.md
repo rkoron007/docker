@@ -1,7 +1,7 @@
 # Container Fun: The Ins and Outs of Containers!
 
-
 ## Learning Goals
+
 - Know How to Create, Stop, and Remove Containers
 - Know How to Create Docker Networks
 - Know how to Persist Data in Docker with Volumes and Bind Mounts
@@ -9,24 +9,26 @@
 - Knowledge of how to Pull Down and Utilize Different Images in your Container
 
 ## Overview
+
 For the project today we are going to be getting really comfortable with running multiple containers at once and utilizing all the different variables that containers allow us access to. Let's get started, shall we?
 
 ## Phase 0: Let's Run Some Containers
-For the first phase of this project we are just going to get comfortable running and monitoring multiple containers at once. We recommend have a text file open for formulating your container commands before you input them into the terminal. 
 
-We'll start by creating three containers. For each of the following containers make sure you are running them detached using [`--detach`][detach] or `-d` and naming each of them with `--name`. Name each container with the image it is running (it's easier to keep track that way).  **Remember:** containers cannot listen on the same local ports! 
+For the first phase of this project we are just going to get comfortable running and monitoring multiple containers at once. We recommend have a text file open for formulating your container commands before you input them into the terminal.
+
+We'll start by creating three containers. For each of the following containers make sure you are running them detached using [`--detach`][detach] or `-d` and naming each of them with `--name`. Name each container with the image it is running (it's easier to keep track that way). **Remember:** containers cannot listen on the same local ports!
 
 1. **Run one container with the `nginx` image**
-    - Have this container listening on `80:80`
+   - Have this container listening on `80:80`
 2. **Run one container with the `httpd (apache)` image**
-    * This image has an exposed port available within the image,  and you can find it yourself in the image's Dockerfile
-        - Start by looking at the [httpd][httpd] image on Docker Hub. There you will find and click a link to the Dockerfile for the latest supported version of this image (which will be tagged `latest`) 
-        - Once you've followed the link you will be viewing the Dockerfile, but what you are specifically looking in this file is the command [`EXPOSE`][expose]. This is where you will find the port that `httpd` is listening for internally.
-        - Once you've found the port `httpd` exposes internally set up your container to run using the `-p` flag with a localhost port on the left and the exposed `httpd` internal port on the right. 
-3. Run one container with the `mysql` image. 
-    -  Have this container publishing the ports for `3306:3306`
-    * One of the common environmental flag arguments passed to images of databases is the flag to set a password.  
-        - For this exercise you'll use the `--environment` or `-e` flag and pass in the password you'd like `mysql` to use when it sets itself up `MYSQL_ROOT_PASSWORD=<your-password>`.
+   - This image has an exposed port available within the image, and you can find it yourself in the image's Dockerfile
+     - Start by looking at the [httpd][httpd] image on Docker Hub. There you will find and click a link to the Dockerfile for the latest supported version of this image (which will be tagged `latest`)
+     - Once you've followed the link you will be viewing the Dockerfile, but what you are specifically looking in this file is the command [`EXPOSE`][expose]. This is where you will find the port that `httpd` is listening for internally.
+     - Once you've found the port `httpd` exposes internally set up your container to run using the `-p` flag with a localhost port on the left and the exposed `httpd` internal port on the right.
+3. Run one container with the `mysql` image.
+   - Have this container publishing the ports for `3306:3306`
+   * One of the common environmental flag arguments passed to images of databases is the flag to set a password.
+     - For this exercise you'll use the `--environment` or `-e` flag and pass in the password you'd like `mysql` to use when it sets itself up `MYSQL_ROOT_PASSWORD=<your-password>`.
 
 You can inspect your new mysql container to make sure your password was configured properly by using `docker container inspect mysql` and seeing the password you set under the "Env" key.
 
@@ -35,7 +37,6 @@ Check that your `nginx` container is running properly by doing either of the fol
 
 1. `curl localhost:80` in your terminal
 2. using your browser to navigate to `http://localhost:80`
-
 
 Do the same for `httpd` on whatever local port you chose to expose. You should see a message from both of those ports and therefore you'll know your containers are running!
 
@@ -49,6 +50,7 @@ d558d946c6a0        httpd               "httpd-foreground"       About a minute 
 ```
 
 ### Time to Clean Up
+
 Nice job! Now let's clean all those containers up with `docker container stop` and `docker container rm` (both can accept multiple container names or container `ID`'s)
 Use `docker container ls -a` to ensure all your containers have been stopped and removed.
 
@@ -57,10 +59,9 @@ Amazing! Now let's see a little more of what containers can do!
 [httpd]: https://hub.docker.com/_/httpd
 [expose]: https://we-are.bookmyshow.com/understanding-expose-in-dockerfile-266938b6a33d
 
-
 ## Phase 1: The Shell Within
 
-Looking at a container from the outside can be interesting but by now you must be wondering if its possible to see what is happening ***inside*** a container? This is totally possible using the `Docker CLI`(Command Line Interface).  
+Looking at a container from the outside can be interesting but by now you must be wondering if its possible to see what is happening **_inside_** a container? This is totally possible using the `Docker CLI`(Command Line Interface).
 
 To enter a container you'll write something like the following:
 
@@ -68,32 +69,34 @@ To enter a container you'll write something like the following:
 docker container run -it <IMAGENAME> <ARG>
 ```
 
-The `-it`  is actually two separate flags you are adding to the `docker container run` command:
-* `-t` - simulates a terminal (like what SSH does)
-* `-i` - keeps a session open to receive terminal input
-* the `<ARG>` part of the command is where we can pass an argument for what we'd like this container to do
+The `-it` is actually two separate flags you are adding to the `docker container run` command:
 
+- `-t` - simulates a terminal (like what SSH does)
+- `-i` - keeps a session open to receive terminal input
+- the `<ARG>` part of the command is where we can pass an argument for what we'd like this container to do
 
 ### Phase A: Interacting with the Shell
+
 The `nginx` image comes with `bash` as part of the image. Meaning that if you start a container using `nginx` as the image and hand it the argument of `bash` to a shell inside the container. Run the following command in your terminal to enter the container:
 
-`docker container run -it --name web nginx bash` 
+`docker container run -it --name web nginx bash`
 
-Bam, you are inside a container! 🙌  You'll see something like this prompt:
+Bam, you are inside a container! 🙌 You'll see something like this prompt:
 
 ```
-root@da9a8ab14300:/# 
+root@da9a8ab14300:/#
 ```
 
-This doesn't mean you are the root of your OS, but rather at the root of the container. You'll see that you can `ls` and do many of the things you could do within a shell normally like update configuration files or download packages from the internet.  
+This doesn't mean you are the root of your OS, but rather at the root of the container. You'll see that you can `ls` and do many of the things you could do within a shell normally like update configuration files or download packages from the internet.
 
-To exit this shell (and container) you can use the `exit` command. This will stop your container because your **containers will only run as long as the command that it ran on startup runs**. To get around this you can use the `docker container exec` command to start a container that will persist past when the startup command has finished. 
+To exit this shell (and container) you can use the `exit` command. This will stop your container because your **containers will only run as long as the command that it ran on startup runs**. To get around this you can use the `docker container exec` command to start a container that will persist past when the startup command has finished.
 
-You can see your stopped container still exists by running `docker container ls -a`. 
+You can see your stopped container still exists by running `docker container ls -a`.
 
-You can restart the container: `docker container start web`, which will restart your container in the background, and then run: `docker container exec -it web bash`. Okay you are back in bash now, try to `exit` again. Now check our the running containers by using `docker container ls` and you'll see your `web` container still running! The `exec` command is what allowed you to exit the container's `bash` command while keeping the container running. 
+You can restart the container: `docker container start web`, which will restart your container in the background, and then run: `docker container exec -it web bash`. Okay you are back in bash now, try to `exit` again. Now check our the running containers by using `docker container ls` and you'll see your `web` container still running! The `exec` command is what allowed you to exit the container's `bash` command while keeping the container running.
 
 ### Phase B: Who-buntu? U-buntu!
+
 Now let's try using a shell to interact with a container. Create a new container named `ubuntu` using `ubuntu` as the image, and this time let's try installing something. Once you have created your container and are in the `bash` shell:
 
 1. update the built-in package manager for ubuntu using the command `apt-get update`
@@ -106,42 +109,41 @@ Now at this point if you started up that container you were just interacting wit
 Try running:
 `docker container run -it --name notliketheother ubuntu bash`
 
-What happens if you try to `curl` something from this container? This `notliketheother` container doesn't have `curl` installed! So though there are two containers running the same image you can alter the image in one container without effecting the other. 
+What happens if you try to `curl` something from this container? This `notliketheother` container doesn't have `curl` installed! So though there are two containers running the same image you can alter the image in one container without effecting the other.
 
-
-💡**Aside**: Using the Ubuntu image vs. the Whole Ubuntu OS? If you have Linux experience, or are currently running Docker through a Linux distribution, you might be asking what happens when you run a Ubuntu container? How is it different from the Ubuntu OS already running on your computer? If you run the `docker image ls` command you can see that the "distribution based images" like Ubuntu, Debian, CentOS, Alpine, etc. are all **very** small, at most a few hundred MB. These images are not full OS's but just the base utilities that you would expect if you were running that full OS. Mostly they are just used as the image you are building `FROM` in a Dockerfile. We'll take more about Dockerfiles soon.  What is important to know is that these "distribution based images" are used commonly so that you can use the built in package managers (`apt`, `yum`, or `apk`) and get the same package versions you'd expect if you were using the full OS.
-
+💡**Aside**: Using the Ubuntu image vs. the Whole Ubuntu OS? If you have Linux experience, or are currently running Docker through a Linux distribution, you might be asking what happens when you run a Ubuntu container? How is it different from the Ubuntu OS already running on your computer? If you run the `docker image ls` command you can see that the "distribution based images" like Ubuntu, Debian, CentOS, Alpine, etc. are all **very** small, at most a few hundred MB. These images are not full OS's but just the base utilities that you would expect if you were running that full OS. Mostly they are just used as the image you are building `FROM` in a Dockerfile. We'll take more about Dockerfiles soon. What is important to know is that these "distribution based images" are used commonly so that you can use the built in package managers (`apt`, `yum`, or `apk`) and get the same package versions you'd expect if you were using the full OS.
 
 ## Phase 2: Quote Generator
 
 So now that we know you can run a shell within a Docker container let's have some fun with it. Here is a simple script that will generate a quote, try running it in your terminal. (If you run into an error for `wget missing` you will have to do a quick `brew install wget`).
 
 ```ssh
-while : 
-do 
+while :
+do
     wget -qO- http://quotesondesign.com/wp-json/posts
-    printf 
-    sleep 5 
+    printf
+    sleep 5
 done
 ```
 
 Okay so now that we know that a docker container can run a shell within it, stands to reason we could also run a shell script.
 
 Let's get to it:
-1. Run a container based off of the [`alpine`][alpine] image 
-1. Name the container something indicative like "quotes"
-1. Run the container in [detached][detach] mode
-1. Alpine's shell is located in the `/bin/sh` folder
-    - You’ll need to compact the script into a one-liner using the `-c` flag and using semicolons to denote line breaks
-    - The command you'll hand to the alpine image will look like this:
+
+1. Run a container based off of the [`alpine`][alpine] image
+2. Name the container something indicative like "quotes"
+3. Run the container in [detached][detach] mode
+4. Alpine's shell is located in the `/bin/sh` folder
+   - You’ll need to compact the script into a one-liner using the `-c` flag and using semicolons to denote line breaks
+   - The command you'll hand to the alpine image will look like this:
 
 ```ssh
 /bin/sh -c "while :; do wget -qO- http://quotesondesign.com/wp-json/posts; print; sleep 5; done"
 ```
 
-Once you've successfully run your container it'll be happily chugging along in the background. But, in the background you won't be able to see the output of that container. Let's utilize the `docker container inspect <containernameORcontainerID>`. This command will allow you to see what that container is running.  Check your logs a few more times and you'll see your script doing it's thing!
+Once you've successfully run your container it'll be happily chugging along in the background. But, in the background you won't be able to see the output of that container. Let's utilize the `docker container inspect <containernameORcontainerID>`. This command will allow you to see what that container is running. Check your logs a few more times and you'll see your script doing it's thing!
 
-Nice! Let's make sure we clean up by using `docker container stop` and `docker container rm` to remove the quote generating container. 
+Nice! Let's make sure we clean up by using `docker container stop` and `docker container rm` to remove the quote generating container.
 
 [alpine]: https://hub.docker.com/_/alpine
 [detach]: https://medium.freecodecamp.org/dockers-detached-mode-for-beginners-c53095193ee9
@@ -149,18 +151,20 @@ Nice! Let's make sure we clean up by using `docker container stop` and `docker c
 ## Phase 3: Networks
 
 ## DNS Round Robin Test
+
 Let's utilize Docker containers and networks to create a small [Round-robin DNS][rr-dns]. Meaning that we want to have multiple containers on one network that can all respond to the same DNS address.
 
 Start off by creating a new virtual Docker network. Check out the `docker network ls` command and make sure you see your new network listed. It should have the default [`bridge`][bridge] driver. Before creating the next two containers you'll want to research the [`--net-alias`][alias] flag to make sure both containers will respond to the same alias.
 
 Now create two `detached` (`-d`) containers on the new network you created. Both containers will run the `elasticsearch:2` image and use `--net-alias`. Inspect one of your new containers using `docker container inspect <containernameORid>`. Under the "Networks" key you can see all the information for the network this container is currently on. You should see the name of your created network here!
 
-Now let's make sure your containers are setup properly. 
- 
+Now let's make sure your containers are setup properly.
+
 Create another container:
+
 1. on the same network
 1. the `alpine` image with the `nslookup` command
-3. finish this line by ending with the name of your network alias. 
+1. finish this line by ending with the name of your network alias.
 
 The `alpine nslookup` command will return any IPs it finds on the network alias, and the name of the network. My network name in the below example is 'funtime', and my network alias is 'party':
 
@@ -170,22 +174,23 @@ Address 1: 172.21.0.2 party.funtime
 Address 2: 172.21.0.3 party.funtime
 ```
 
-
-Finally run one more container- and this one will be simple. We want to make sure our two containers are responding to the same alias. To do this, we'll `curl` the port that both of the two `elasticsearch` containers are on. So our two `elasticsearch` expose the port 9200 but only **within** the network. Outside of the network we can't access them. So we'll create one more container to interact with our twin `elasticsearches`.  Run one more container off the network you created with the `centos` image and the command to `curl -s <network alias name>:9200`. Run this last container a couple of times and you will see JSON being returned from each `elasticsearch` container. Each `elasticsearch` container will have a randomly generated "name" so as you `curl` one then the other you will see the "name" change as each container responds.
+Finally run one more container- and this one will be simple. We want to make sure our two containers are responding to the same alias. To do this, we'll `curl` the port that both of the two `elasticsearch` containers are on. So our two `elasticsearch` expose the port 9200 but only **within** the network. Outside of the network we can't access them. So we'll create one more container to interact with our twin `elasticsearches`. Run one more container off the network you created with the `centos` image and the command to `curl -s <network alias name>:9200`. Run this last container a couple of times and you will see JSON being returned from each `elasticsearch` container. Each `elasticsearch` container will have a randomly generated "name" so as you `curl` one then the other you will see the "name" change as each container responds.
 
 Just like that you have a small load balancer! Round-robin complete!
-
 
 [rr-dns]: https://en.wikipedia.org/wiki/Round-robin_DNS
 [alias]: https://docs.docker.com/v17.12/edge/engine/reference/commandline/run/
 [bridge]: https://docs.docker.com/network/bridge/
+
 ## Phase 4: Persistent Data in Docker
+
 As I’ve said before, Docker containers are not supposed to maintain any state. But what if we need state? In fact, some processes are inherently stateful, like a database. For example, a database needs to maintain all the data stored inside of it, as that’s a purpose of the database. If we store a database and it's data inside a container, when it’s is gone, so is the data. We are facing the problem of not having persistent data. Thank goodness Docker has a solution ready.
 
 ### Part A: Bind Mounts
+
 Bind mounts allow you to take a directory or individual file that exists on your machine (from herein called the Host, or Docker Host) and access that directory or file inside the running container. Any changes you make to the directory contents, or individual file will cause the file(s) to change on the Host machine.
 
-Start by running a fun named, detached, container based off the `nginx` image. 
+Start by running a fun named, detached, container based off the `nginx` image.
 
 ```ssh
 $ docker container run -d --name DogsRGood nginx
@@ -212,7 +217,7 @@ docker container run \
     this
 ```
 
-Now go bind mount that volume (use the `--mount` command with a `type`, `source`, and `target`). Make sure your target path is **absolute** from your root. You got this! Now to test that it worked you can enter the new detached container you created using the `exec` command, the `-it` flag, and then hand it the command of `bash` to be executed. 
+Now go bind mount that volume (use the `--mount` command with a `type`, `source`, and `target`). Make sure your target path is **absolute** from your root. You got this! Now to test that it worked you can enter the new detached container you created using the `exec` command, the `-it` flag, and then hand it the command of `bash` to be executed.
 
 ```ssh
 root@d46d99c3a840:/# ls
@@ -243,6 +248,7 @@ root@d46d99c3a840:/rad# exit
 So bind mounts can be helpful in local development if you are constantly changing a file - but as we just saw they are way more security prone because any change on your localhost will affect the data in your container! This is why you'll usually want to be using a `docker volume`.
 
 ### Part B: Docker Volumes
+
 Volumes have several advantages over bind mounts, here is a quick list as a reminder before you get started working with them:
 
 1. Volumes are easier to back up or migrate than bind mounts.
@@ -252,9 +258,9 @@ Volumes have several advantages over bind mounts, here is a quick list as a remi
 1. Volume drivers allow you to store volumes on remote hosts or cloud providers, to encrypt the contents of volumes, or to add other functionality.
 1. A new volume’s contents can be pre-populated by a container.
 
-As we've gone over before- you are never supposed to change a container, just deploy and redeploy. For this next part of the project we'll be emulating a real life situation. What if you were working on a project with a Postgres database and a newer patch for that image came out with a security fix. You definitely want that new patch - but you also don't want to lose all your database data. So we'll utilize named volumes to carry the data from one container to another one. 
+As we've gone over before- you are never supposed to change a container, just deploy and redeploy. For this next part of the project we'll be emulating a real life situation. What if you were working on a project with a Postgres database and a newer patch for that image came out with a security fix. You definitely want that new patch - but you also don't want to lose all your database data. So we'll utilize named volumes to carry the data from one container to another one.
 
-In short, we'll be updating a container from one version of Postgres to a newer patched version while maintaining the data in the database. Visit the Postgres image on [Docker Hub][dh-postgres] and find any of the `9.6` versions of the image (**Hint**: you may have to look under the Tags tab.). There you'll find the `Dockerfile` for this image but what you are interested is the `VOLUME` command in the `Dockerfile`. The `VOLUME` command will tell you where this image keeps it's data - and we'll utilize that path in order to save that data. 
+In short, we'll be updating a container from one version of Postgres to a newer patched version while maintaining the data in the database. Visit the Postgres image on [Docker Hub][dh-postgres] and find any of the `9.6` versions of the image (**Hint**: you may have to look under the Tags tab.). There you'll find the `Dockerfile` for this image but what you are interested is the `VOLUME` command in the `Dockerfile`. The `VOLUME` command will tell you where this image keeps it's data - and we'll utilize that path in order to save that data.
 
 Create a detached container running the `9.6.1` version of the Postgres image, with a [named volume][name-volume] called `psql-data` pointing at the data inside the Postgres volume. Check the logs for this container and make sure the database has finished starting up, you should see this message:
 
@@ -262,7 +268,7 @@ Create a detached container running the `9.6.1` version of the Postgres image, w
 PostgreSQL init process complete; ready for start up.
 ```
 
-Make sure a volume with the name you specified was created by using `docker volume ls`. Inspect the volume you created `docker volume inspect psql-data`. Now we'll put some data into the volume as a test to make sure it'll properly transfer between the two containers. Enter the Postgres container with the following command: 
+Make sure a volume with the name you specified was created by using `docker volume ls`. Inspect the volume you created `docker volume inspect psql-data`. Now we'll put some data into the volume as a test to make sure it'll properly transfer between the two containers. Enter the Postgres container with the following command:
 `docker container exec -it <YOUCONTAINERID> psql -U postgres`. Then once you are in postgres post the following in order to create a table:
 
 ```sql
@@ -272,7 +278,7 @@ Make sure a volume with the name you specified was created by using `docker volu
     name VARCHAR (255) NOT NULL,
     );
 
-    -- cat seeding 
+    -- cat seeding
     INSERT INTO
     cats (name)
     VALUES
@@ -291,9 +297,8 @@ Amazing Job today! You've worked with different containers and their networks, p
 [name-volume]: https://success.docker.com/article/different-types-of-volumes
 [dh-postgres]: https://hub.docker.com/_/postgres
 
-
 ## Bonus Health Checks:
 
-Go back and prove your devotion to good testing by re-running all your containers using Container [Health Checks][health]! 
+Go back and prove your devotion to good testing by re-running all your containers using Container [Health Checks][health]!
 
 [health]: https://docs.docker.com/engine/reference/run/#healthcheck

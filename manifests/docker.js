@@ -26,6 +26,10 @@ const courses = {
         {
           id: "four",
           name: "Day 4: Hosting Using Docker"
+        },
+        {
+          id: "five",
+          name: "Day 5: Project Polishing"
         }
       ],
       subtopics: [
@@ -104,6 +108,15 @@ const courses = {
       subtopicId: "materials"
     },
     {
+      name: "Container Intro",
+      type: "Video",
+      id: "74416845-306F-4B39-B07F-64953E7B9370",
+      href: "https://player.vimeo.com/video/324339043",
+      timeEstimate: "00:12:00",
+      topicId: "one",
+      subtopicId: "materials"
+    },
+    {
       name: "Container Command Cheat Sheet",
       type: "Reading",
       id: "B9B8B421-B229-4DDB-8729-C57D4CCEAF88",
@@ -154,11 +167,11 @@ const courses = {
       subtopicId: "materials"
     },
     {
-      name: "Container Intro",
-      type: "Video",
-      id: "74416845-306F-4B39-B07F-64953E7B9370",
-      href: "https://player.vimeo.com/video/324339043",
-      timeEstimate: "00:12:00",
+      name: "DNS Overview",
+      type: "Reading",
+      id: "94970693-a0a9-4282-b760-04b87e228288",
+      href: "https://workshop.reclaimhosting.com/dns/dns-summary/",
+      timeEstimate: "00:05:00",
       topicId: "one",
       subtopicId: "materials"
     },
@@ -211,7 +224,8 @@ const courses = {
       name: "Immutable Infrastructure",
       type: "ExternalResource",
       id: "6923B5D3-B9C7-42AC-974B-CC582D915809",
-      href: "https://www.oreilly.com/ideas/an-introduction-to-immutable-infrastructure",
+      href:
+        "https://www.oreilly.com/ideas/an-introduction-to-immutable-infrastructure",
       timeEstimate: "00:20:00",
       topicId: "one",
       subtopicId: "additional resources"
@@ -231,7 +245,8 @@ const courses = {
       id: "E7FDF6A7-2194-470D-95D3-A30EF8679655",
       repo: "docker-course",
       path: "homeworks/first_containers/README.md",
-      solution: "http://assets.aaonline.io/Docker/homeworks/first_containers/solutions.md.zip",
+      solution:
+        "http://assets.aaonline.io/Docker/homeworks/first_containers/solutions.md.zip",
       acceptSubmission: true,
       timeEstimate: "00:20:00",
       topicId: "one",
@@ -243,7 +258,8 @@ const courses = {
       id: "21C860B8-9FD2-4CD1-9CAE-05636D5B221C",
       repo: "docker-course",
       path: "projects/container_fun/README.md",
-      solution: "http://assets.aaonline.io/Docker/projects/container_fun/solutions.md.zip",
+      solution:
+        "http://assets.aaonline.io/Docker/projects/container_fun/solutions.md",
       acceptSubmission: true,
       timeEstimate: "05:00:00",
       topicId: "one",
@@ -323,7 +339,8 @@ const courses = {
       id: "E2B500BD-B441-45C8-8797-05F4B15C54A9",
       repo: "docker-course",
       path: "homeworks/first_dockerfile/README.md",
-      solution: "http://assets.aaonline.io/Docker/homeworks/first_dockerfile/solution.zip",
+      solution:
+        "http://assets.aaonline.io/Docker/homeworks/first_dockerfile/solution.zip",
       acceptSubmission: true,
       timeEstimate: "00:35:00",
       topicId: "two",
@@ -335,7 +352,8 @@ const courses = {
       id: "936AC830-2CE9-432A-A42F-A06B04EA7D40",
       repo: "docker-course",
       path: "projects/dockerfiles_galore/README.md",
-      solution: "http://assets.aaonline.io/Docker/projects/dockerfiles_galore/solution.zip",
+      solution:
+        "http://assets.aaonline.io/Docker/projects/dockerfiles_galore/solution.zip",
       acceptSubmission: true,
       timeEstimate: "06:00:00",
       topicId: "two",
@@ -384,7 +402,8 @@ const courses = {
       name: "Comprehensive Docker Article",
       type: "ExternalResource",
       id: "875D3E8B-678C-495B-BD0C-04858F69B57E",
-      href: "https://medium.freecodecamp.org/comprehensive-introductory-guide-to-docker-vms-and-containers-4e42a13ee103",
+      href:
+        "https://medium.freecodecamp.org/comprehensive-introductory-guide-to-docker-vms-and-containers-4e42a13ee103",
       timeEstimate: "00:30:00",
       topicId: "three",
       subtopicId: "additional resources"
@@ -395,7 +414,8 @@ const courses = {
       id: "C3EC1485-062A-4437-8312-799C9BAAF613",
       repo: "docker-course",
       path: "homeworks/first_composition/README.md",
-      solution: "http://assets.aaonline.io/Docker/homeworks/first_composition/solution.zip",
+      solution:
+        "http://assets.aaonline.io/Docker/homeworks/first_composition/solution.zip",
       acceptSubmission: true,
       timeEstimate: "00:30:00",
       topicId: "three",
@@ -407,7 +427,8 @@ const courses = {
       id: "5CE6040D-2E3C-41C3-9A39-BEDC6C336786",
       repo: "docker-course",
       path: "projects/compose_pros/README.md",
-      solution: "http://assets.aaonline.io/Docker/projects/compose_pros/solution.zip",
+      solution:
+        "http://assets.aaonline.io/Docker/projects/compose_pros/solution.zip",
       acceptSubmission: true,
       timeEstimate: "06:00:00",
       topicId: "three",
@@ -451,6 +472,26 @@ const courses = {
       timeEstimate: "06:00:00",
       topicId: "four",
       subtopicId: "homeworks"
+    },
+    {
+      name: "Pushing to Heroku Continued",
+      type: "Reading",
+      id: "365ed346-3bb0-41c4-8e70-cfbfb53ab2b5",
+      repo: "docker-course",
+      path: "projects/heroku_push/README.md",
+      timeEstimate: "06:00:00",
+      topicId: "four",
+      subtopicId: "projects"
+    },
+    {
+      name: "Polishing Your Projects",
+      type: "Reading",
+      id: "743628bb-bd71-4d7c-b8db-e1f5de7d5dcc",
+      repo: "docker-course",
+      path: "readings/day_five.md",
+      timeEstimate: "08:00:00",
+      topicId: "five",
+      subtopicId: "projects"
     }
   ]
 };
