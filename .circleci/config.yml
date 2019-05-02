@@ -1,0 +1,155 @@
+defaults: &defaults # TODO: Replace working directory with current repo name
+  working_directory: ~/docker-course
+  docker:
+    - image: circleci/node:10
+
+validate-populate: &validate-populate
+  <<: *defaults
+  steps:
+    - checkout
+
+    - attach_workspace:
+        at: ./
+
+    - run:
+        name: Validate
+        command: npx aa-validate
+
+    - run:
+        name: Populate
+        command: npx aa-populate
+
+    # Optionally, show populated files
+    - run:
+        name: Show populated files
+        command: cat .build/populated_task_groups.json
+
+    - run:
+        name: Parse
+        command: npx aa-parse
+
+    # Optionally, show parsed files
+    - run:
+        name: Show parsed files
+        command: cat .build/parsed_task_groups.json
+
+    - run:
+        name: Validate Templates
+        command: npx aa-validate-templates
+
+    - persist_to_workspace:
+        root: ./
+        paths:
+          - .build
+
+    - store_artifacts:
+        path: .build/errors.json
+
+deploy: &deploy
+  <<: *defaults
+  steps:
+    - attach_workspace:
+        at: ./
+
+    - run:
+        name: Deploy
+        command: npx aa-deploy
+
+    - run:
+        name: Store Deploy
+        command: npx aa-store-deploy
+
+    - run:
+        name: Analytics
+        command: npx aa-analytics
+
+    - store_artifacts:
+        path: .build/errors.json
+
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - run:
+          name: Add NPM Token to npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+
+      - run:
+          name: Install course-builder
+          command: npm install @appacademy/course-builder@${COURSE_BUILDER_VERSION}
+
+      - run:
+          name: Create build folder
+          command: |
+            mkdir .build
+
+      - run:
+          name: Build
+          command: npx aa-build
+
+      # Optionally, show build files
+      - run:
+          name: Show built files
+          command: cat .build/built_task_groups.json
+
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - .build
+            - node_modules
+
+  validate-populate-staging:
+    <<: *validate-populate
+
+  validate-populate-production:
+    <<: *validate-populate
+
+  deploy-staging:
+    <<: *deploy
+
+  deploy-production:
+    <<: *deploy
+
+workflows:
+  version: 2
+  build_validate_deploy:
+    jobs:
+      - build:
+          context: npm-token-read
+      - validate-populate-staging:
+          context: course-deployment-staging
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - master
+      - validate-populate-production:
+          context: course-deployment-production
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-staging:
+          context: course-deployment-staging
+          filters:
+            branches:
+              only:
+                - staging
+          requires:
+            - build
+            - validate-populate-staging
+      - deploy-production:
+          context: course-deployment-production
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build
+            - validate-populate-production

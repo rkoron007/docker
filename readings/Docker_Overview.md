@@ -7,7 +7,7 @@
 + Docker Images and Layers
 + Dockerfiles
 + Local Development with Docker Compose
-+ Hosting Your Projects Using Docker
++ Hosting Your Projects Using Docker and Heroku
 
 ## Great Outside Resources:
 - [12-Factor](https://12factor.net/)
