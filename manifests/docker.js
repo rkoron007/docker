@@ -3,7 +3,7 @@ const courses = {
     example_1: {
       taskGroupId: "8BCA0B7F-0CBB-418C-9F7F-FAFBEF50F1E7",
       name: "SWE Online - Docker Curriculum",
-      url: "swe-online-docker-curriculum",
+      urls: ["swe-online-docker-curriculum"],
       track: "SWE Online",
       order: 11,
       topics: [
@@ -21,15 +21,7 @@ const courses = {
         },
         {
           id: "three",
-          name: "Day 3: Docker Compose"
-        },
-        {
-          id: "four",
-          name: "Day 4: Hosting Using Docker"
-        },
-        {
-          id: "five",
-          name: "Day 5: Project Polishing"
+          name: "Day 3: Docker Compose & Hosting"
         }
       ],
       subtopics: [
@@ -261,7 +253,7 @@ const courses = {
       solution:
         "http://assets.aaonline.io/Docker/projects/container_fun/solutions.md",
       acceptSubmission: true,
-      timeEstimate: "05:00:00",
+      timeEstimate: "02:00:00",
       topicId: "one",
       subtopicId: "projects"
     },
@@ -430,7 +422,7 @@ const courses = {
       solution:
         "http://assets.aaonline.io/Docker/projects/compose_pros/solution.zip",
       acceptSubmission: true,
-      timeEstimate: "06:00:00",
+      timeEstimate: "04:00:00",
       topicId: "three",
       subtopicId: "projects"
     },
@@ -441,7 +433,7 @@ const courses = {
       repo: "docker-course",
       path: "readings/projects_dockerfile.md",
       timeEstimate: "00:20:00",
-      topicId: "four",
+      topicId: "three",
       subtopicId: "materials"
     },
     {
@@ -450,7 +442,7 @@ const courses = {
       id: "AAADA132-2430-4B9C-AD81-4722929400AE",
       href: "https://tuhrig.de/docker-vs-heroku/",
       timeEstimate: "00:20:00",
-      topicId: "four",
+      topicId: "three",
       subtopicId: "materials"
     },
     {
@@ -460,7 +452,7 @@ const courses = {
       repo: "docker-course",
       path: "readings/heroku_guide.md",
       timeEstimate: "00:20:00",
-      topicId: "four",
+      topicId: "three",
       subtopicId: "materials"
     },
     {
@@ -470,8 +462,8 @@ const courses = {
       repo: "docker-course",
       path: "readings/put_it_together.md",
       timeEstimate: "06:00:00",
-      topicId: "four",
-      subtopicId: "homeworks"
+      topicId: "three",
+      subtopicId: "projects"
     },
     {
       name: "Example Docker Push to Heroku",
@@ -480,28 +472,8 @@ const courses = {
       repo: "docker-course",
       path: "demos/pushing_to_heroku/README.md",
       timeEstimate: "00:30:00",
-      topicId: "four",
+      topicId: "three",
       subtopicId: "additional resources"
-    },
-    {
-      name: "Pushing to Heroku Continued",
-      type: "Reading",
-      id: "365ed346-3bb0-41c4-8e70-cfbfb53ab2b5",
-      repo: "docker-course",
-      path: "projects/heroku_push/README.md",
-      timeEstimate: "06:00:00",
-      topicId: "four",
-      subtopicId: "projects"
-    },
-    {
-      name: "Polishing Your Projects",
-      type: "Reading",
-      id: "743628bb-bd71-4d7c-b8db-e1f5de7d5dcc",
-      repo: "docker-course",
-      path: "readings/day_five.md",
-      timeEstimate: "08:00:00",
-      topicId: "five",
-      subtopicId: "projects"
     }
   ]
 };

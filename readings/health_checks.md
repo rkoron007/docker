@@ -5,19 +5,19 @@ Health Checks are exactly what they sound like - a way of checking the health of
 
 The `HEALTHCHECK` instruction tells Docker how to test a container to check that it is still working. A good health check can detect cases such as a web server that is stuck in an infinite loop and unable to handle new connections, even though the server process is still running. 
 
-## Why You Should HealthCheck
-Well, to be honest, in a small scale development case it may not make that much of a difference because we're just running the development server. Theoretically though, even in development you lose the app you were running, but the container would still be running. So the normal state of the container would be "running" even though we are no longer serving traffic.
+## Why You Should Health Check
+Well, to be honest, in a small scale development case it may not make that much of a difference because we're usually just running a container or two. However, even while working in development, one of your containers could go down without a "hard fail", leaving the container running without the service running. So the normal state of the container would be "running" even though we are no longer serving traffic. Knowing about Health Checks is always useful.
 
-So to be specific, Docker Health Checks are most helpful in a **production** environment. Learning them now will prepare you for that environment!
+So to be specific, Docker Health Checks are most helpful in a **production** environment. Learning and practicing using them now, in development, will prepare you for production!
 
 [hc]: https://docs.docker.com/engine/reference/builder/#healthcheck
+
 ## Docker Container Health
 When a container has a HealthCheck specified, it has a health status in addition to its normal status. A Docker container can have three health statuses:
 
   1. `starting`: This takes up to 30 seconds to run, and represents the process of the container booting up
   2. `healthy`: The container will continue to run its Health Check at every specified interval
   3. `unhealthy`:  After a certain number of consecutive failures the container's status will be unhealthy
-
 
 ## HealthCheck Syntax
 

@@ -17,7 +17,9 @@ services:
 
 Now you'll need to tell Compose to `build` a custom image for you. Reference the [build documentation][build-docs] if you need any syntax help. Make sure to name the image you'll be building by adding a `image` command below your `build` command. Finally you'll want to tell Docker Compose which ports you want to expose when it creates the container for you. Expose your local port 80 aiming traffic at port 80 in the container.
 
-Awesome! Use `docker-compose up` and when Compose tells you the container is attached try going to `http://localhost:80`.
+**Linux Users:** Some students using Linux have had trouble exposing port 80 locally - if this happens feel free to use port 81 instead. 
+
+Awesome! Use `docker-compose up` and when Compose tells you the container is attached to the network it will then "hang" - try going to `http://localhost:80`.
 
 Awesome - and make sure to check out the color coded logs that Compose provides you for each container. Now cancel out of the server and use `docker-compose down` to have compose automatically stop and remove the container it started up. Nice huh?
 

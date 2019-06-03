@@ -218,11 +218,15 @@ We'll write a custom `Dockerfile` and start your app with Docker Compose. When c
 
 ### Part A: Dockerfile
 
-For this first part, we will be creating a custom `Dockerfile` for drupal and will be using Git to install a custom HTML theme.
+For this first part, we will be:
+1. Creating a custom `Dockerfile` for the `drupal` image
+2. Downloading and then using `Git` to install a custom Drupal HTML theme([Bootstrap][bootstrap]).
 
-Start by creating a `.dockerignore` and ignoring the usual things. Then create a `Dockerfile` that will be built from `drupal:8.6`. Then `RUN` the `apt` package manager command to install git: `apt-get update && apt-get install -y git`. This installation add in a lot of extra files which we won't want in our image. Clean up after your apt install with `rm -rf /var/lib/apt/lists/*` and use `\` and `&&` properly. Take a look back at the Dockerfile docs if you need a reminder on syntax.
+Start by creating a `.dockerignore` and ignoring the usual things. Then create a `Dockerfile` that will be built from `drupal:8.6`. Now we know we'll need to install Git for the next part but the `drupal:8.6` image doesn't currently have it - meaning we'll need to download it!
 
-Change your working directory to access where Drupal keeps the html templates - `/var/www/html/themes`. Then use git to clone in our chosen theme using the command
+Start off by using `RUN` to run the `apt` package manager command to install git: `apt-get update && apt-get install -y git`. Whenever you download anything inside a docker container the installation will almost always leave a lot of extra files which we won't want in our image. Clean up after your installation by adding the command `rm -rf /var/lib/apt/lists/*`. Make sure to use `\` and `&&` properly! Take a look back at the Dockerfile docs if you need a reminder on syntax.
+
+Next step is to change your working directory(`WORKDIR`) within the container to access where Drupal keeps the html templates - `/var/www/html/themes`. Then use git to clone in our chosen theme using the command:
 
 ```ssh
 git clone --branch 8.x-3.x --single-branch --depth 1 https://git.drupal.org/project/bootstrap.git
@@ -230,11 +234,15 @@ git clone --branch 8.x-3.x --single-branch --depth 1 https://git.drupal.org/proj
 
 **Note:** The reason we are telling git `--single-branch --depth 1` is because we only want the most recent version of this one branch. This saves you a **ton** of time over downloading all the branches so it's a handy way to avoid extra bloat in your image.
 
-Now we have a problem you might encounter with Docker in the future - the files we just downloaded have been put in the directory as `root`. This `drupal` container runs as a `www-data` user but the files we just built actually run as `root`. So often you'll need to [`chown`][chown] to change the file ownership so the file can be used by another container. Chain the following command to the last `RUN` statement in your Dockerfile - `chown -R www-data:www-data bootstrap`. When you use `chown -R` you are saying you want to change the owner for all files (including directories) - which will allow `drupal` to access the files properly.
+Now we just need to solve one last problem. Something you might encounter while working with Docker is having to sometimes [change file permissions][file-permissions]. The files we just used Git to download have been put in the directory under the ownership of `root`. However the `drupal` image is expecting all the files it will be running to be under the ownership of the `www-data` user. Meaning we will need to **change the permissions** of these files.
+
+We will use the [`chown`][chown] command to change the file ownership of these permissions.  Chain the following command to the last `RUN` statement in your Dockerfile - `chown -R www-data:www-data bootstrap`. When you use `chown -R` you are saying you want to change the owner for all files (including directories) - which will allow `drupal` to access all the files in the `bootstrap` directory properly.
 
 Nicely done! Now let's build it up using Compose.
 
 [chown]: https://linux.die.net/man/1/chown
+[bootstrap]: https://git.drupalcode.org/project/bootstrap
+[file-permissions]: https://www.hostingadvice.com/how-to/change-file-ownershipgroups-linux/
 
 ### Part B: Compose File
 
@@ -252,7 +260,8 @@ Here select `PostgreSQL` because that is obviously what you are using. Now the f
 
 1. `database name` - since we didn't specify the default name is 'postgres'.
 2. `Database password` - will be what you set the postgres password environment variable to
-3. Click `Advanced Options` - here the **host** name will be the **name of your postgres service**.
+3. `Database username` -  defaults to `postgres`
+4. Click `Advanced Options` - here the **host** name will be the **name of your postgres service**.
 
 Next drupal will build your site, which will take a moment. On the next page you'll encounter a 'configure site' page which you can just fill in with whatever you please since you won't be checking this site in the future (the email boxes will need an `@` sign). After that you should have access to the main Drupal service.
 

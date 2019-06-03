@@ -1,5 +1,7 @@
 # Let's Get Started with Docker!
 
+**Before We Started:** For tomorrow's project you'll be using `wget` so tonight please run a quick `brew install wget` to make sure you have it on your computer!
+
 ## Running your first containers
 
 Now that you are taking your first steps towards becoming a Docker master we'll start with the always traditional "HelloWorld".

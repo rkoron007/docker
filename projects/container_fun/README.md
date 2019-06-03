@@ -10,17 +10,21 @@
 
 ## Overview
 
-For the project today we are going to be getting really comfortable with running multiple containers at once and utilizing all the different variables that containers allow us access to. Let's get started, shall we?
+For the project today we are going to be getting really comfortable with running multiple containers at once and utilizing all the different variables that containers allow us access to. In the next few days you'll be using a lot of new services you haven't worked with before. We want to to make you get accustomed with one of Docker's main advantages: the ability to use all kinds of different services with minimal setup. If you are curious about any particular image you encounter in the next few days we recommend checking out the image's [`DockerHub`][dockerhub] page. Now, let's get started!
+
+[dockerhub]: https://hub.docker.com/
 
 ## Phase 0: Let's Run Some Containers
 
-For the first phase of this project we are just going to get comfortable running and monitoring multiple containers at once. We recommend have a text file open for formulating your container commands before you input them into the terminal.
+For the first phase of this project we are just going to get comfortable running and monitoring multiple containers at once. For this project you'll be writing **long** container commands. We recommend have a text file open for formulating your container commands before you input them into the terminal.
 
 We'll start by creating three containers. For each of the following containers make sure you are running them detached using [`--detach`][detach] or `-d` and naming each of them with `--name`. Name each container with the image it is running (it's easier to keep track that way). **Remember:** containers cannot listen on the same local ports!
 
 1. **Run one container with the `nginx` image**
+    - The `Nginx` image provides an open source and easy to use proxy server.
    - Have this container listening on `80:80`
 2. **Run one container with the `httpd (apache)` image**
+    - The `httpd` is an image that provides a popular HTTP server.
    - This image has an exposed port available within the image, and you can find it yourself in the image's Dockerfile
      - Start by looking at the [httpd][httpd] image on Docker Hub. There you will find and click a link to the Dockerfile for the latest supported version of this image (which will be tagged `latest`)
      - Once you've followed the link you will be viewing the Dockerfile, but what you are specifically looking in this file is the command [`EXPOSE`][expose]. This is where you will find the port that `httpd` is listening for internally.
@@ -35,7 +39,7 @@ You can inspect your new mysql container to make sure your password was configur
 The `nginx` and `httpd` images are built so that if you travel to the port you exposed on your local machine you'll be able to see a response.
 Check that your `nginx` container is running properly by doing either of the following:
 
-1. `curl localhost:80` in your terminal
+1. Running the [`curl`][curl] command by using the command: `curl localhost:80` in your terminal
 2. using your browser to navigate to `http://localhost:80`
 
 Do the same for `httpd` on whatever local port you chose to expose. You should see a message from both of those ports and therefore you'll know your containers are running!
@@ -58,6 +62,7 @@ Amazing! Now let's see a little more of what containers can do!
 
 [httpd]: https://hub.docker.com/_/httpd
 [expose]: https://we-are.bookmyshow.com/understanding-expose-in-dockerfile-266938b6a33d
+[curl]: https://curl.haxx.se/
 
 ## Phase 1: The Shell Within
 
@@ -131,6 +136,7 @@ Okay so now that we know that a docker container can run a shell within it, stan
 Let's get to it:
 
 1. Run a container based off of the [`alpine`][alpine] image
+    - The `alpine` image is a Linux distribution that is very popular amoung Docker images because it is only 5 MB in size.
 2. Name the container something indicative like "quotes"
 3. Run the container in [detached][detach] mode
 4. Alpine's shell is located in the `/bin/sh` folder
@@ -156,6 +162,12 @@ Let's utilize Docker containers and networks to create a small [Round-robin DNS]
 
 Start off by creating a new virtual Docker network. Check out the `docker network ls` command and make sure you see your new network listed. It should have the default [`bridge`][bridge] driver. Before creating the next two containers you'll want to research the [`--net-alias`][alias] flag to make sure both containers will respond to the same alias.
 
+Next we'll be using two containers running the `elasticsearch` image. The  `elasticsearch` image provides a RESTful search engine that exposes port 9200 by default. The `elasticsearch` image is popular because of how easy it is to setup and use. The two things you'll need to know about the  `elasticsearch` image for this exercise are:
+
+1. On container bootup the `elasticsearch` image will randomly assign itself a new name
+2. When you `curl` a container running the  `elasticsearch` image it will return information about the container- including the randomized name it previously created. 
+
+
 Now create two `detached` (`-d`) containers on the new network you created. Both containers will run the `elasticsearch:2` image and use `--net-alias`. Inspect one of your new containers using `docker container inspect <containernameORid>`. Under the "Networks" key you can see all the information for the network this container is currently on. You should see the name of your created network here!
 
 Now let's make sure your containers are setup properly.
@@ -163,7 +175,7 @@ Now let's make sure your containers are setup properly.
 Create another container:
 
 1. on the same network
-1. the `alpine` image with the `nslookup` command
+1. with the `alpine` image with the [`nslookup`][nslookup] command
 1. finish this line by ending with the name of your network alias.
 
 The `alpine nslookup` command will return any IPs it finds on the network alias, and the name of the network. My network name in the below example is 'funtime', and my network alias is 'party':
@@ -174,13 +186,16 @@ Address 1: 172.21.0.2 party.funtime
 Address 2: 172.21.0.3 party.funtime
 ```
 
-Finally run one more container- and this one will be simple. We want to make sure our two containers are responding to the same alias. To do this, we'll `curl` the port that both of the two `elasticsearch` containers are on. So our two `elasticsearch` expose the port 9200 but only **within** the network. Outside of the network we can't access them. So we'll create one more container to interact with our twin `elasticsearches`. Run one more container off the network you created with the `centos` image and the command to `curl -s <network alias name>:9200`. Run this last container a couple of times and you will see JSON being returned from each `elasticsearch` container. Each `elasticsearch` container will have a randomly generated "name" so as you `curl` one then the other you will see the "name" change as each container responds.
+Finally run one more container- and this one will be simple. We want to make sure our two containers are responding to the same alias. To do this, we'll `curl` the port that both of the two `elasticsearch` containers are on. So our two `elasticsearch` containers expose the port 9200 but only **within** the network. Outside of the network we **can't** access these containers. 
+
+So we'll create one more container to interact with our twin `elasticsearch` containers. Run a new container off the network you created with the `centos` (another Linux distribution) image and the command to `curl -s <network alias name>:9200`. Restart this last container a couple of times and you will see JSON being returned from each `elasticsearch` container. Each `elasticsearch` container will have a randomly generated "name" so as you `curl` one then the other you will see the "name" change as each container responds.
 
 Just like that you have a small load balancer! Round-robin complete!
 
 [rr-dns]: https://en.wikipedia.org/wiki/Round-robin_DNS
 [alias]: https://docs.docker.com/v17.12/edge/engine/reference/commandline/run/
 [bridge]: https://docs.docker.com/network/bridge/
+[nslookup]: http://www.kloth.net/services/nslookup.php
 
 ## Phase 4: Persistent Data in Docker
 
