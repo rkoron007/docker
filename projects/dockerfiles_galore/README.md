@@ -94,7 +94,7 @@ Nice! Looking more efficient already without all those `node_modules` taking up 
 
 ### Part B: A Container Should Do One Thing Only.
 
-Technically, you CAN start multiple processes inside a Docker container. You CAN put your database, frontend, backend, `ssh`, and `supervisor` all into one docker image. But this is **not** good practice because:
+Technically, you CAN start multiple processes inside a Docker container. You CAN put your database, frontend, backend, [`ssh`][ssh], and [`supervisor`][supervisor] all into one docker image. But this is **not** good practice because:
 
 1. Your build times will be **long** -remember every time something changes in a Dockerfile everything below that change won't be able to use the image cache.
 2. You image will be large and take a while to download and upload.
@@ -102,6 +102,11 @@ Technically, you CAN start multiple processes inside a Docker container. You CAN
 4. Doesn't scale well at all.
 
 The list goes on! Docker's advice is to prepare separate Docker image for each component of your app. Remove the packages that aren't helping you run a node app from your `Dockerfile`. Make sure to update the `CMD` to only include the command for the package you kept.
+
+
+[supervisor]: http://supervisord.org/
+[ssh]: https://www.ssh.com/ssh/protocol/
+
 
 ### Part C: Layers
 
