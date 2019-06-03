@@ -236,7 +236,7 @@ git clone --branch 8.x-3.x --single-branch --depth 1 https://git.drupal.org/proj
 
 Now we just need to solve one last problem. Something you might encounter while working with Docker is having to sometimes [change file permissions][file-permissions]. The files we just used Git to download have been put in the directory under the ownership of `root`. However the `drupal` image is expecting all the files it will be running to be under the ownership of the `www-data` user. Meaning we will need to **change the permissions** of these files.
 
-We will use [`chown`][chown] command to change the file ownership of these permissions.  Chain the following command to the last `RUN` statement in your Dockerfile - `chown -R www-data:www-data bootstrap`. When you use `chown -R` you are saying you want to change the owner for all files (including directories) - which will allow `drupal` to access all the files in the `bootstrap` directory properly.
+We will use the [`chown`][chown] command to change the file ownership of these permissions.  Chain the following command to the last `RUN` statement in your Dockerfile - `chown -R www-data:www-data bootstrap`. When you use `chown -R` you are saying you want to change the owner for all files (including directories) - which will allow `drupal` to access all the files in the `bootstrap` directory properly.
 
 Nicely done! Now let's build it up using Compose.
 
