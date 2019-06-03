@@ -133,7 +133,7 @@ For this `Dockerfile` use the `16.03` tagged version of `ubuntu`.
 
 ### Part E: Use the Proper Base Image
 
-So we mentioned before that this is a `Dockerfile` for a Node app...then why is `ubuntu` our base image? Do we really need a general-purpose base image, when we just want to run a node application? A Better option is to use a specialized image with node already installed. And while we are it let's use the `alpine` tagged version of node to make sure our image is as small as possible. Change the base image to `node:7-alpine`.
+So we mentioned before that this is a `Dockerfile` for a Node app...then why is `ubuntu` our base image? Do we really need a general-purpose base image, when we just want to run a node application? A Better option is to use a specialized image with node already installed. And while we are it let's use the `alpine` tagged version of node to make sure our image is as small as possible. Change the base image to `node:10-alpine`.
 
 Now that we have node installed remove all the `apt-get` lines that were originally installing node for you.
 
@@ -165,7 +165,11 @@ Take a look through the files for this phase and you'll see a React/Redux applic
 
 We have two main concerns but we only want to build one image. One way we can get around this is by using [multi-stage builds][ms-b]. Once our code has been built using `node` we don't actually require any `node` functionality anymore. So we can use the files that `node` built and hand them to `nginx` to replace the default html that `nginx` renders.
 
-Think about how you'd ordinarily run this application. You would bundle your script using "npm start" and then render the `index.html` in your browser. That is basically our aim!
+Think about how you'd ordinarily run this kind of application. You would:
+1. Run webpack to bundle your code using "npm start".
+2. Create a script tag in the `index.html` and then render that page in your browser.
+
+That is basically our aim!
 
 Start off by creating a `.dockerignore` and fill it with what you'll want to ignore in our built image. Then create a `Dockerfile`, for the `FROM` command use a recent node version like `node:8.15-alpine` and name this stage of the build for later reference.
 
