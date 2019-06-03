@@ -273,8 +273,8 @@ Now you have all the tools you need to host your own projects locally! Make sure
 
 [build-docs]: https://docs.docker.com/compose/compose-file/#build
 
-## Bonuses A: Add Health Checks!
+## Bonuses: Add Health Checks!
 
-Show how devoted you are to good testing by adding [health checks][health] to all the `docker_compose.yml` files you've written today. Make sure your helath checks work and everything still runs properly.
+Show how devoted you are to good testing by adding [health checks][health] to all the `docker_compose.yml` files you've written today. Make sure your health checks work and everything still runs properly.
 
 [health]: https://docs.docker.com/compose/compose-file/#healthcheck
