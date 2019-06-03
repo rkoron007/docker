@@ -3,7 +3,7 @@ const courses = {
     example_1: {
       taskGroupId: "8BCA0B7F-0CBB-418C-9F7F-FAFBEF50F1E7",
       name: "SWE Online - Docker Curriculum",
-      urls: "swe-online-docker-curriculum",
+      urls: ["swe-online-docker-curriculum"],
       track: "SWE Online",
       order: 11,
       topics: [
