@@ -10,7 +10,7 @@
 
 ## Overview
 
-For the project today we are going to be getting really comfortable with running multiple containers at once and utilizing all the different variables that containers allow us access to. In the next few days you'll be using a lot of new services you haven't worked with before. The reason for this is to make you accustomed with one of Docker's main advantages: the ability to use all kinds of different services with minimal setup. If you are curious about any particular image you encounter in the next few days we recommend checking out the image's [`DockerHub`][dockerhub] page. Now, let's get started!
+For the project today we are going to be getting really comfortable with running multiple containers at once and utilizing all the different variables that containers allow us access to. In the next few days you'll be using a lot of new services you haven't worked with before. We want to to make you get accustomed with one of Docker's main advantages: the ability to use all kinds of different services with minimal setup. If you are curious about any particular image you encounter in the next few days we recommend checking out the image's [`DockerHub`][dockerhub] page. Now, let's get started!
 
 [dockerhub]: https://hub.docker.com/
 
