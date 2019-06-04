@@ -273,14 +273,8 @@ Now you have all the tools you need to host your own projects locally! Make sure
 
 [build-docs]: https://docs.docker.com/compose/compose-file/#build
 
-## Bonuses A: Add Health Checks!
+## Bonuses: Add Health Checks!
 
-Show how devoted you are to good testing by adding [health checks][health] to all the `docker_compose.yml` files you've written today. Make sure your helath checks work and everything still runs properly.
+Show how devoted you are to good testing by adding [health checks][health] to all the `docker_compose.yml` files you've written today. Make sure your health checks work and everything still runs properly.
 
 [health]: https://docs.docker.com/compose/compose-file/#healthcheck
-
-## Bonuses B: Kubernetes Tutorial
-
-Follow this awesome [Kubernetes Tutorial][kubernetes] to start learning about one of the most supported orchestration platforms. Kubernetes is a **very** popular choice for companies looking to deploy containerized applications onto a cluster. Be the best developer you can be by learning about how to scale deployments!
-
-[kubernetes]: https://kubernetes.io/docs/tutorials/kubernetes-basics/

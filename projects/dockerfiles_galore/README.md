@@ -194,8 +194,14 @@ Congratulations on some amazing Dockerfiles! Make sure to push all to today's Do
 [todos]: https://aa-todos.herokuapp.com/
 [ms-b]: https://docs.docker.com/develop/develop-images/multistage-build/#name-your-build-stages
 
-## Bonus: Health Checks
+## Bonus A: Health Checks
 
 Prove you are testing oriented by writing [health checks][health] for all the `Dockerfiles` you've written today. After you've finished make sure you images all run properly before you re-push your changed images up to Docker Hub. Mody Dock would be proud! 🐳
 
 [health]: https://docs.docker.com/engine/reference/builder/#healthcheck
+
+## Bonuses B: Kubernetes Tutorial
+
+Follow this awesome [Kubernetes Tutorial][kubernetes] to start learning about one of the most supported orchestration platforms. Kubernetes is a **very** popular choice for companies looking to deploy containerized applications onto a cluster. Be the best developer you can be by learning about how to scale deployments!
+
+[kubernetes]: https://kubernetes.io/docs/tutorials/kubernetes-basics/
