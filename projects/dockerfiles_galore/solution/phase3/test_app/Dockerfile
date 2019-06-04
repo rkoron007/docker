@@ -1,5 +1,5 @@
 # Use the correct base image
-FROM node:7-alpine
+FROM node:10-alpine
 
 # Change Directories Before Copying Files
 WORKDIR /app 

@@ -1,6 +1,6 @@
 # Docker Finale! Put it All Together
 
-You've learned the fundamentals of Docker and now it's time to put it all together! You've accrued a couple of projects by now and the assignment for your homework tonight, and for all day tomorrow is create a `Dockerfile`, and a `docker-compose.yml` file for each project you have completed. Make sure to check out the `Example Docker Push to Heroku` to see an example of how we Dockerize and push a Rails/React application up to the Heroku Container Registry.
+You've learned the fundamentals of Docker and now it's time to put it all together! You've accrued a couple of projects by now and the assignment for the remainder of the day as well as the upcoming weekend is to create a `Dockerfile`, and a `docker-compose.yml` file for each project you have worked on thus far. Make sure to check out the `Example Docker Push to Heroku` to see an example of how we Dockerize and push a Rails/React application up to the Heroku Container Registry.
 
 If you have completed a group project, then work with your group to create a `Dockerfile` and a `docker-compose.yml` together. Your goal is to have someone be able to download your project from Github and then have it up and running using `docker-compose up` without having to download anything besides Docker.
 

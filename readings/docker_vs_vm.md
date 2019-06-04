@@ -49,12 +49,12 @@ The first and most obvious downside of using a virtual machine is inefficient re
 
 ## Containers Use the Host Kernel
 
-To put it simply, a container is kind of like a application for your phone with app-scoped resources. A Container uses the Kernel of the Host operating system. Containers have their own allocated file system and IP. Libraries, binaries, and services are installed inside a container, however, all the system calls and Kernel functionality comes from the underlying host OS. Containers are **super** lightweight. They booting up and redeploying of containers happens in seconds, because they don’t need to start up the Kernel every time.
+To put it simply, a container is kind of like a application for your phone with app-scoped resources. A Container uses the Kernel of the Host operating system. Containers have their own allocated file system and IP. Libraries, binaries, and services are installed inside a container, however, all the system calls and Kernel functionality comes from the underlying host OS. Containers are **super** lightweight. The booting up and redeploying of containers happens in seconds, because they don’t need to start up the Kernel every time.
 
 ## Containers vs. VMs
 
 A container’s purpose is to run processes in an isolated environment. Meaning that in Docker you'd run one container for every single process you needed. VMs are for emulating an entire machine. Nowadays only Linux and Windows containers exist, but there are all kinds of hypervisors to emulate any kind of operating system.
 
-Containers are awesome because of their lightweight nature, but there are definitely situations where using a virtual machine becomes worth the associated resource cost. Containers make system calls directly to the Kernel, which opens up a whole variety of vulnerabilities. Making VMs more secure overall.
+Containers are awesome because of their lightweight nature, but there are definitely situations where using a virtual machine becomes worth the associated resource cost. Containers make system calls directly to the Kernel, which opens up a whole variety of vulnerabilities. Meaning that in general - VMs are more secure overall than just using Docker.
 
 Often you see Docker containers running inside virtual machines in a production environment, so VMs and containers can be buddies and work together well.
