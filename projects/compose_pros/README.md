@@ -275,6 +275,8 @@ Now you have all the tools you need to host your own projects locally! Make sure
 
 ## Bonuses: Add Health Checks!
 
+**Complete deploying your projects to Heroku using Docker before attempting this phase.**
+
 Show how devoted you are to good testing by adding [health checks][health] to all the `docker_compose.yml` files you've written today. Make sure your health checks work and everything still runs properly.
 
 [health]: https://docs.docker.com/compose/compose-file/#healthcheck
