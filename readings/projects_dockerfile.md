@@ -1,5 +1,7 @@
 # Creating a Dockerfile for Your Project
 
+**You will be expected to deploy both your Full Stack Project and your MERN stack projects onto Heroku using Docker.**
+
 Now you'll be putting your new found skills to the test by creating a Dockerfile for each of the images you'll be needing to run your own projects. You might be tempted to build one mega image with all of your services and code inside of it but that defeats the whole purpose of the container model. Meaning you'd have slow image building, slow image pushing and pulling, and lower efficiency in running your code locally and in production. 
 
 Since each container you are running should only have one single thing it is in charge of, a good rule of thumb is to have one image for each service your application will need. For example: if you have a Rails, React, and PostgreSQL application then you'd have one container running Rails, one running Node to interpret JavaScript, and one container running PostgreSQL. In that scenario you'd create a `Dockerfile` for your Rails service **and** a `Dockerfile` for your React service, and just use the base image for Postgres. 
