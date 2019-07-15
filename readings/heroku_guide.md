@@ -54,12 +54,9 @@ After that decision is made you can use the Heroku CLI with the command
 error you might have to add the container registry plugin by running
 `heroku plugins:install heroku-container-registry`).
 
-At this point the next step is to push your custom image(s). Before you do so we
-recommend reading [this list][heroku-docker] of things you will need to setup in
-order to use Docker in production on Heroku. (Pay close attention to the `$PORT`
-section because this will be how you connect your database to your application).
-For a current list of `Dockerfile` commands not currently supported in Heroku
-see [here][dockerfile-heroku].
+At this point the next step is to push your custom image(s). For a current list
+of `Dockerfile` commands not currently supported in Heroku see
+[here][dockerfile-heroku].
 
 Now let's talk about pushing up your images! If you have one `Dockerfile` you
 can use `heroku container:push <process-type> (web, frontend, etc.)`. This
