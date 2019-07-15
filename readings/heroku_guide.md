@@ -35,9 +35,9 @@ The steps to pushing up your image to Heroku will be different depending on the
 application you are trying to push up but we'll be covering your basic Heroku
 flow in this reading.
 
-**TL;DR:** We do not use `docker-compose` when pushing to Heroku. You will be
-pushing images straight up to the container registry. Then using Heroku `dyno`s
-to run your images.
+**Important:** We do not use `docker-compose` when pushing to Heroku. You will
+be pushing images straight up to the container registry. Then using Heroku
+`dyno`s to run your images.
 
 If you've previously pushed your project to Heroku the first thing decision
 you'll have to make is whether you'd like to create a new Heroku project or
