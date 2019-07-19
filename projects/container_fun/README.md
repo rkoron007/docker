@@ -136,7 +136,7 @@ Okay so now that we know that a docker container can run a shell within it, stan
 Let's get to it:
 
 1. Run a container based off of the [`alpine`][alpine] image
-    - The `alpine` image is a Linux distribution that is very popular amoung Docker images because it is only 5 MB in size.
+    - The `alpine` image is a Linux distribution that is very popular among Docker images because it is only 5 MB in size.
 2. Name the container something indicative like "quotes"
 3. Run the container in [detached][detach] mode
 4. Alpine's shell is located in the `/bin/sh` folder
