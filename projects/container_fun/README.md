@@ -126,7 +126,7 @@ So now that we know you can run a shell within a Docker container let's have som
 while :
 do
     wget -qO- http://quotesondesign.com/wp-json/posts
-    printf '/n'
+    printf '\n'
     sleep 5s
 done
 ```
@@ -144,7 +144,7 @@ Let's get to it:
    - The command you'll hand to the alpine image will look like this:
 
 ```ssh
-/bin/sh -c "while :; do wget -qO- http://quotesondesign.com/wp-json/posts; printf '/n'; sleep 5s; done"
+/bin/sh -c "while :; do wget -qO- http://quotesondesign.com/wp-json/posts; printf '\n'; sleep 5s; done"
 ```
 
 Once you've successfully run your container it'll be happily chugging along in the background. But, in the background you won't be able to see the output of that container. Let's utilize the `docker container inspect <containernameORcontainerID>`. This command will allow you to see what that container is running. Check your logs a few more times and you'll see your script doing it's thing!
@@ -290,7 +290,7 @@ Make sure a volume with the name you specified was created by using `docker volu
     CREATE TABLE cats
     (
     id SERIAL PRIMARY KEY,
-    name VARCHAR (255) NOT NULL,
+    name VARCHAR (255) NOT NULL
     );
 
     -- cat seeding
