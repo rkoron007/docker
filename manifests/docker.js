@@ -1,3 +1,45 @@
+const topics = [
+  {
+    id: "zero",
+    name: "Getting Started"
+  },
+  {
+    id: "one",
+    name: "Day 1: Docker and Containers"
+  },
+  {
+    id: "two",
+    name: "Day 2: Images and the Dockerfile"
+  },
+  {
+    id: "three",
+    name: "Day 3: Docker Compose & Hosting"
+  }
+];
+
+const subtopics = [
+  {
+    id: "nosubtopic",
+    name: "NOSUBTOPIC"
+  },
+  {
+    id: "materials",
+    name: "Materials"
+  },
+  {
+    id: "additional resources",
+    name: "Additional Resources"
+  },
+  {
+    id: "homeworks",
+    name: "Homeworks"
+  },
+  {
+    id: "projects",
+    name: "Projects"
+  }
+]
+
 const courses = {
   courses: {
     example_1: {
@@ -6,46 +48,17 @@ const courses = {
       urls: ["swe-online-docker-curriculum"],
       track: "SWE Online",
       order: 11,
-      topics: [
-        {
-          id: "zero",
-          name: "Getting Started"
-        },
-        {
-          id: "one",
-          name: "Day 1: Docker and Containers"
-        },
-        {
-          id: "two",
-          name: "Day 2: Images and the Dockerfile"
-        },
-        {
-          id: "three",
-          name: "Day 3: Docker Compose & Hosting"
-        }
-      ],
-      subtopics: [
-        {
-          id: "nosubtopic",
-          name: "NOSUBTOPIC"
-        },
-        {
-          id: "materials",
-          name: "Materials"
-        },
-        {
-          id: "additional resources",
-          name: "Additional Resources"
-        },
-        {
-          id: "homeworks",
-          name: "Homeworks"
-        },
-        {
-          id: "projects",
-          name: "Projects"
-        }
-      ]
+      topics: topics,
+      subtopics: subtopics 
+    },
+    self_study: {
+      taskGroupId: "93e94923-6964-4f79-87b7-ff9fb059c348",
+      name: "Self-Study - Docker Curriculum",
+      urls: ["self-study-docker-curriculum"],
+      track: "Self-Study",
+      order: 2,
+      topics: topics,
+      subtopics: subtopics 
     }
   },
   tasks: [
