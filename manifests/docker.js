@@ -74,7 +74,7 @@ const courses = {
       tags: ["docker"],
       description: "Learn Docker!",
       track: "Full Stack Online",
-      order: 2,
+      order: 11,
       topics: topics,
       subtopics: subtopics
     }
