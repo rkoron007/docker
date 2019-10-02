@@ -56,7 +56,7 @@ const courses = {
     },
     self_study: {
       taskGroupId: "93e94923-6964-4f79-87b7-ff9fb059c348",
-      name: "Self-Study - Docker Curriculum",
+      name: "Docker Curriculum",
       urls: ["self-study-docker-curriculum"],
       catalog: false,
       tags: ["docker"],
