@@ -65,6 +65,18 @@ const courses = {
       order: 2,
       topics: topics,
       subtopics: subtopics
+    },
+    open: {
+      taskGroupId: "8f2a83a3-a4f7-4fd6-8a3e-f9f203e36067",
+      name: "Docker Curriculum",
+      urls: ["full-stack-online-docker-curriculum"],
+      catalog: false,
+      tags: ["docker"],
+      description: "Learn Docker!",
+      track: "Full Stack Online",
+      order: 2,
+      topics: topics,
+      subtopics: subtopics
     }
   },
   tasks: [
