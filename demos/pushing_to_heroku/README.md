@@ -4,12 +4,12 @@ In this demo we'll be walking through how we Docker-ized an application and then
 deployed that application to the Heroku Container Registry. The application
 we'll be using for this demo will look pretty familiar - it's
 [Pokedex][pokedex](click here to download and view the files we wrote)! We'll
-walk through how we created Dockerfiles for the two main services in our
+walk through how we created a Dockerfile for the two main services in our
 application (Rails and React) and what configuration changes we ended up making
 along the way.
 
 [pokedex]:
-  https://s3-us-west-1.amazonaws.com/appacademy-open-assets/Docker/demos/pushing_to_heroku/pokedex.zip
+  https://appacademy-open-assets.s3-us-west-1.amazonaws.com/Docker/demos/pushing_to_heroku/pokedex.zip
 
 ## Running the Application Locally Using Docker
 
@@ -17,16 +17,20 @@ along the way.
 
 We'll start by building the Dockerfile for the Rails side of things. We used
 this [docker-compose][docker-c] guide to as our starting point to building a
-Rails Dockerfile. We created a new file `entrypoint.sh` to fix Rails-specific
-issue that prevents the server from restarting when a certain `server.pid` file
-pre-exists:
+Rails Dockerfile.
+
+The first thing we did was create a new file named `entrypoint.sh` to fix a
+Rails-specific Docker issue that prevents the server from restarting when a
+`server.pid` file exists:
 
 ```sh
 #!/bin/bash
 set -e
 
 # Remove a potentially pre-existing server.pid for Rails.
-rm -f /myapp/tmp/pids/server.pid
+# If Rails sees another server.pid it will think another Rails server is already
+# runnning and will terminate.
+rm -f ./my_app/tmp/pids/server.pid
 
 # Then exec the container's main process (what's set as CMD in the Dockerfile).
 exec "$@"
@@ -61,17 +65,53 @@ production:
   password:
 ```
 
-Finally we created our `Dockerfile`. Since this application will have more than
-one `Dockerfile` and we knew Rails would be in charge of our server we followed
-convention and named this file `Dockerfile.web`:
+Finally we created our `Dockerfile`. We used a multi-stage build in order to
+first bundle our React assets before moving on to build our Rails application.
+Take a look at the comments below and then we will walk through how it works:
 
 ```dockerfile
-# Dockerfile.web
+# PHASE ONE:
+# Here we are compiling our frontend assets
+# Since we only need need Node for generating our bundle
+# we will use a multi-stage build to keep our image small
 
+# The below layers will NOT be included in the final image
+
+# setting up our image aliased as build
+FROM node:12.2.0-alpine as build
+
+# set working directory inside node
+WORKDIR /usr/src/node_app
+
+# environment vars must be included in dockerfile
+ARG NODE_ENV=production
+
+# Add our node modules to our path
+ENV PATH /usr/src/node_app/node_modules/.bin:$PATH
+
+# copy over our package.json
+COPY package.json /usr/src/node_app/package.json
+
+#  install dependencies silently so we don't have to
+#  watch the whole thing download every time
+RUN npm install --silent
+
+# Copy over the rest of our file so webpack will be able bundle it
+COPY . /usr/src/node_app
+
+# this is the most important line!
+#  This is where we will create our bundle files that we will copy over later!
+# npm run postinstall will run the command: "webpack --mode=production"
+RUN npm run postinstall
+
+
+# PHASE TWO:
+# this will be the actual base image of the image we are building
 # We are going from the alpine version of ruby to save space
 FROM ruby:2.5.5-alpine3.9
 
-# We tell the image `--no-cache` so we don't clog up our image with the things we are downloading
+# We tell the image `--no-cache` so we don't
+# clog up our image with the things we are downloading
 RUN apk add --no-cache --update build-base \
   linux-headers \
   git \
@@ -80,103 +120,79 @@ RUN apk add --no-cache --update build-base \
   tzdata
 
 
-# environment vars must be included in our dockerfile
+# environment vars must be included in the dockerfile
 ARG DATABASE_URL="postgres://postgres@db"
 ARG RAILS_ENV=production
 
 # copy over our Gemfile
-WORKDIR /myapp
-COPY Gemfile /myapp/Gemfile
-COPY Gemfile.lock /myapp/Gemfile.lock
+WORKDIR /my_app
+COPY Gemfile /my_app/Gemfile
+COPY Gemfile.lock /my_app/Gemfile.lock
+
 # We gem install bundler for a specific issue with bundler 2.0
 # then we can bundle install
 RUN gem install bundler && bundle install
-COPY . /myapp
+COPY . /my_app
+
+# Here is where that build stage from earlier comes in. We don't need all the
+# Javascript dependencies just the bundle files! So we will copy those over into
+# our final image
+COPY --from=build /usr/src/node_app/app/assets/javascripts/bundle.js ./app/assets/javascripts/
+COPY --from=build /usr/src/node_app/app/assets/javascripts/bundle.js.map ./app/assets/javascripts/
 
 # Add a script to be executed every time the container starts.
+# This script will take care of a Rails specific Docker issue
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 
+# Expose our port
 EXPOSE 3000
 
 # Start the main process.
 CMD ["rails", "server", "-b", "0.0.0.0"]
 ```
 
-### Node Dockerfile
+Since our Rails application only needs Node in order to bundle our dependencies
+we use a multistage build to first build our `bundle.js` and our
+`bundle.js.map`. The majority of the layers in Phase One will not be added to
+our final image.
 
-Then we need to create a Dockerfile to bundle our React code with JavaScript.
-We'll call this file `Dockerfile.frontend`:
+Once we start Phase Two we are actually building the base image for our image.
+So the base image for our app will be `ruby:2.5.5-alpine3.9`. Then we take care
+of installing all our Ruby dependencies. You'll notice two very long `COPY`
+lines after we `bundle install`. This is where we will be using the files that
+we created earlier with that node image! We take just the `bundle.js` and the
+`bundle.js.map` and add them to the `javascripts` folder within the image file
+system we are creating. Finally we add the script we wrote earlier to take care
+of the Rails `server.pid` Docker problem we described earlier.
 
-```dockerfile
-# Dockerfile.frontend
-
-# base image
-FROM node:11-alpine
-
-# set working directory
-WORKDIR /usr/src/app
-
-# environment vars must be included in dockerfile
-ARG NODE_ENV=production
-
-# add `/usr/src/app/node_modules/.bin` to $PATH
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
-
-# install and cache app dependencies
-COPY package.json /usr/src/app/package.json
-
-# silent so we don't have to watch the whole thing download everytime
-RUN npm install --silent
-
-# Start application
-CMD ["npm", "start"]
-```
-
-That's it for React! Now we can build our `docker-compose.yml` using these two
-Dockerfiles.
+Then we expose our port and start our server!
 
 ## Docker Compose file
 
-Now we can use our nifty new Dockerfiles and make sure everything runs locally
-by setting up a `docker-compose.yml`:
+Now we can use our nifty new Dockerfile and make sure everything runs locally by
+setting up a `docker-compose.yml`:
 
 ```yml
-# docker-compose.yml
 version: "3"
 services:
   db:
     image: postgres
-    # set up a volume so our database info persists
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
   web:
-    # building our own docker image
     build:
       context: .
-      dockerfile: Dockerfile.web
-    # name our image
-    image: rkoron/pokedex-web
+      dockerfile: Dockerfile
+    image: rkoron/pokedex-rails
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
     depends_on:
-      # setting up a dependency on our database container
       - db
     environment:
       DATABASE_URL: postgres://postgres@db
-  frontend:
-    # building our own docker image
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    image: rkoron/pokedex-frontend
-    volumes:
-      - ".:/usr/src/app"
-      - "/usr/src/app/node_modules"
-    environment:
-      - NODE_ENV=development
 ```
 
 Now we can run `docker-compose up -d` and see the application running on
@@ -213,8 +229,11 @@ Container Registry][register]!
    - Migrations: `heroku run rails db:migrate -a {NAME_OF_APP}`
    - Seeding: `heroku run rails db:seed -a {NAME_OF_APP}`
 
+**Reminder**: We don't have Active Storage on this Application but if we did we
+would need add our `master.key` to Heroku too!
+
 And that is it! We can now use `heroku open` to be able to see the Pokedex
 application in all it's glory! If you run into any troubles while you are
-following this guide feel free to check the `heroku logs` for your application.
+following this guide make sure to check the `heroku logs` for your application.
 
 [register]: https://devcenter.heroku.com/articles/container-registry-and-runtime

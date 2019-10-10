@@ -63,16 +63,18 @@ can use `heroku container:push <process-type> (web, frontend, etc.)`. This
 command will build your image from a file in the current directory named
 `Dockerfile` and will push that image to the container registry.
 
-If you have multiple services (Rails and React for example) you'll need two
+If you have multiple services (Flask and React for example) you'll need two
 `Dockerfile`s. The naming format would as follows:
 
 ```ruby
 ls -R
 
-# Main Directory for the Rails Application (web is the default name for the service receiving HTTP requests)
+# Main Directory for the Flask Application
+# (web is the default name for the service receiving HTTP requests)
 Dockerfile.web
 
-# /frontend - give your Dockerfile endings meaningful names
+# Main Directory for the React Application
+# Give your Dockerfile endings meaningful names!
 Dockerfile.frontend
 ```
 

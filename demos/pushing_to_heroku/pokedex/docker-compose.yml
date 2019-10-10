@@ -7,7 +7,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: Dockerfile
     image: rkoron/pokedex-rails
     volumes:
       - .:/myapp
@@ -17,13 +17,3 @@ services:
       - db
     environment:
       DATABASE_URL: postgres://postgres@db
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    image: rkoron/pokedex-react
-    volumes:
-      - ".:/usr/src/app"
-      - "/usr/src/app/node_modules"
-    environment:
-      - NODE_ENV=development
