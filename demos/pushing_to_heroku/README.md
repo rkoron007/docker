@@ -65,6 +65,38 @@ production:
   password:
 ```
 
+Now we'll want to make sure we include a `.dockerignore` to make sure we don't
+include any unnecessary files:
+
+```ruby
+# for all code you usually don't want .git history in image, just the current commit you have checked out
+.git
+
+# you usually don't want dockerfile and compose files in the image either
+*docker-compose*
+
+# for Node.js apps, you want to build the node_modules in the image -> not copy from host
+node_modules
+
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+.byebug_history
+bundle.js
+bundle.js.map
+.DS_Store
+npm-debug.log
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+```
+
 Finally we created our `Dockerfile`. We used a multi-stage build in order to
 first bundle our React assets before moving on to build our Rails application.
 Take a look at the comments below and then we will walk through how it works:
@@ -163,10 +195,12 @@ of installing all our Ruby dependencies. You'll notice two very long `COPY`
 lines after we `bundle install`. This is where we will be using the files that
 we created earlier with that node image! We take just the `bundle.js` and the
 `bundle.js.map` and add them to the `javascripts` folder within the image file
-system we are creating. Finally we add the script we wrote earlier to take care
-of the Rails `server.pid` Docker problem we described earlier.
+system we are creating (we know these files aren't included in our image already
+because of our `.dockerignore`).
 
-Then we expose our port and start our server!
+Finally we add the script we wrote earlier to take care of the Rails
+`server.pid` Docker problem we described earlier. Then we expose our port and
+start our server!
 
 ## Docker Compose file
 
