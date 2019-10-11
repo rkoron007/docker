@@ -37,7 +37,8 @@ exec "$@"
 ```
 
 Then we went had to change our database configuration to make sure it would hook
-up to the Postgres database we will later define in our `docker-compose` file:
+up to the Postgres database we will later be defining in our `docker-compose`
+file:
 
 ```yml
 # config/database.yml
@@ -66,19 +67,20 @@ production:
 ```
 
 Now we'll want to make sure we include a `.dockerignore` to make sure we don't
-include any unnecessary files:
+include any unnecessary files in our images:
 
 ```ruby
-# for all code you usually don't want .git history in image, just the current commit you have checked out
+# We don't want our entire .git history in the image we are building
 .git
 
-# you usually don't want dockerfile and compose files in the image either
+# you usually don't want the dockerfile or the compose files in the image either
 *docker-compose*
+Dockerfile
 
 # for Node.js apps, you want to build the node_modules in the image -> not copy from host
 node_modules
 
-# Ignore bundler config.
+# Ignore the bundler config.
 /.bundle
 
 # Ignore all logfiles and tempfiles.
@@ -87,11 +89,15 @@ node_modules
 !/log/.keep
 !/tmp/.keep
 
-.byebug_history
-bundle.js
-bundle.js.map
+# Ignore our byebug history and extra logging files
 .DS_Store
 npm-debug.log
+.byebug_history
+
+# We want to generate our own bundle not use any pre-existing bundles
+bundle.js
+bundle.js.map
+
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
@@ -131,10 +137,10 @@ RUN npm install --silent
 # Copy over the rest of our file so webpack will be able bundle it
 COPY . /usr/src/node_app
 
-# this is the most important line!
-#  This is where we will create our bundle files that we will copy over later!
-# npm run postinstall will run the command: "webpack --mode=production"
+# this is the most important line of this build process!
+# this is where we will create our bundle files that we will copy over later
 RUN npm run postinstall
+# npm run postinstall will run the command: "webpack --mode=production"
 
 
 # PHASE TWO:
@@ -173,7 +179,8 @@ COPY --from=build /usr/src/node_app/app/assets/javascripts/bundle.js ./app/asset
 COPY --from=build /usr/src/node_app/app/assets/javascripts/bundle.js.map ./app/assets/javascripts/
 
 # Add a script to be executed every time the container starts.
-# This script will take care of a Rails specific Docker issue
+# This script will take care of a Rails specific Docker issue with the server
+# not starting
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 
@@ -186,14 +193,14 @@ CMD ["rails", "server", "-b", "0.0.0.0"]
 
 Since our Rails application only needs Node in order to bundle our dependencies
 we use a multistage build to first build our `bundle.js` and our
-`bundle.js.map`. The majority of the layers in Phase One will not be added to
-our final image.
+`bundle.js.map`. The majority of the layers in Phase One will not be included in
+our final image (just the `bundle.js` and the `bundle.map.js`).
 
-Once we start Phase Two we are actually building the base image for our image.
-So the base image for our app will be `ruby:2.5.5-alpine3.9`. Then we take care
-of installing all our Ruby dependencies. You'll notice two very long `COPY`
-lines after we `bundle install`. This is where we will be using the files that
-we created earlier with that node image! We take just the `bundle.js` and the
+Once we start Phase Two we are actually building our final image. So the base
+image for our app will be `ruby:2.5.5-alpine3.9`. Then we take care of
+installing all our Ruby dependencies. You'll notice two very long `COPY` lines
+after we `bundle install`. This is where we will be using the files that we
+created earlier with that node image! We take just the `bundle.js` and the
 `bundle.js.map` and add them to the `javascripts` folder within the image file
 system we are creating (we know these files aren't included in our image already
 because of our `.dockerignore`).
@@ -248,12 +255,14 @@ Container Registry][register]!
    `heroku container:login`.
 2. Then we'll create a new application: `heroku create`
 3. We'll then build and push up our images to the registry.
-   - We can push up all our Dockerfiles and images by running:
-     `heroku container:push --recursive -a {NAME_OF_HEROKU_APP}`
-   - If you only wanted to push one of your Dockerfiles you can run:
-     `heroku container:push {SERVICE_NAME} --recursive -a {NAME_OF_HEROKU_APP}`
+   - We can push up all our Dockerfile and images by running:
+     `heroku container:push web -a {NAME_OF_HEROKU_APP}`
+     - When we use the name `web` above we are telling Heroku to use this image
+       as the web process (the default process)
 4. Release your now built Images to Containers on Heroku:
-   `heroku container:release web frontend -a {NAME_OF_HEROKU_APP}`
+   `heroku container:release web -a {NAME_OF_HEROKU_APP}`
+   - Again, when we use the name `web` above we are telling Heroku to release
+     this image as the web process (the default process)
 5. Now we'll need to add a database `Addon` for our application.
    - On the dashboard for this Heroku application if you look under the
      `Resources` tab you will see the ability to search for and add `Add-ons`.
@@ -264,7 +273,8 @@ Container Registry][register]!
    - Seeding: `heroku run rails db:seed -a {NAME_OF_APP}`
 
 **Reminder**: We don't have Active Storage on this Application but if we did we
-would need add our `master.key` to Heroku too!
+would need add our `master.key` and any configuration keys to our Heroku config
+too!
 
 And that is it! We can now use `heroku open` to be able to see the Pokedex
 application in all it's glory! If you run into any troubles while you are
