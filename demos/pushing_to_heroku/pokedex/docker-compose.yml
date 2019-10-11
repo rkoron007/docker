@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     image: rkoron/pokedex-rails
     volumes:
-      - .:/myapp
+      - .:/my_app
     ports:
       - "3000:3000"
     depends_on:
