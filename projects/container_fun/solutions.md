@@ -27,8 +27,8 @@ exit docker container rm ubuntu
 
 Run our named, detached container off alpine with our script!
 
-docker container run -d --name quotes alpine /bin/sh -c "while :; do wget -qO-
-http://quotesondesign.com/wp-json/posts; printf '\n'; sleep 5s; done"
+docker container run -d --name characters alpine:3.7.3 /bin/sh -c "while :; do
+wget -qO- https://swapi.co/api/people/?search=r2; printf '\n'; sleep 5s; done"
 
 ## Phase 3: Networking:
 
@@ -47,7 +47,11 @@ docker container run --net funtime alpine nslookup party
 
 Now let's query them:
 
-docker container run --net funtime centos curl -s party:9200
+docker container run --name curler --net funtime centos curl -s party:9200
+
+docker container restart curler
+
+docker container logs curler
 
 ## Phase 4:
 
