@@ -214,7 +214,7 @@ stands to reason we could also run a shell script.
 
 Let's get to it:
 
-1. Run a container based off of the [`alpine`][alpine] image
+1. Run a container based off of the [`alpine`][alpine] image, version 3.7.3
    - The `alpine` image is a Linux distribution that is very popular among
      Docker images because it is only 5 MB in size.
 2. Name the container something indicative like "characters"
