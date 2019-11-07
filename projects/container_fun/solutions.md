@@ -47,7 +47,11 @@ docker container run --net funtime alpine nslookup party
 
 Now let's query them:
 
-docker container run --net funtime centos curl -s party:9200
+docker container run --name curler --net funtime centos curl -s party:9200
+
+docker container restart curler
+
+docker container logs curler
 
 ## Phase 4:
 

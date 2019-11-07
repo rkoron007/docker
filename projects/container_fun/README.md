@@ -302,10 +302,10 @@ So we'll create one more container to interact with our twin `elasticsearch`
 containers. Run a new container off the network you created with the `centos`
 (another Linux distribution) image and the command to
 `curl -s <network alias name>:9200`. Restart this last container a couple of
-times and you will see JSON being returned from each `elasticsearch` container.
-Each `elasticsearch` container will have a randomly generated "name" so as you
-`curl` one then the other you will see the "name" change as each container
-responds.
+times and check the logs for the `centos` container each time you restart. Each
+`elasticsearch` container will have a randomly generated "name" so as you `curl`
+the port they both share inside the network you should see one of the two
+containers responding everytime.
 
 Just like that you have a small load balancer! Round-robin complete!
 
