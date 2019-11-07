@@ -118,14 +118,14 @@ What happens if you try to `curl` something from this container? This `notliketh
 
 💡**Aside**: Using the Ubuntu image vs. the Whole Ubuntu OS? If you have Linux experience, or are currently running Docker through a Linux distribution, you might be asking what happens when you run a Ubuntu container? How is it different from the Ubuntu OS already running on your computer? If you run the `docker image ls` command you can see that the "distribution based images" like Ubuntu, Debian, CentOS, Alpine, etc. are all **very** small, at most a few hundred MB. These images are not full OS's but just the base utilities that you would expect if you were running that full OS. Mostly they are just used as the image you are building `FROM` in a Dockerfile. We'll talk more about Dockerfiles soon. What is important to know is that these "distribution based images" are used commonly so that you can use the built in package managers (`apt`, `yum`, or `apk`) and get the same package versions you'd expect if you were using the full OS.
 
-## Phase 2: Quote Generator
+## Phase 2: Character Generator
 
-So now that we know you can run a shell within a Docker container let's have some fun with it. Here is a simple script that will generate a quote, try running it in your terminal. (If you run into an error for `wget missing` you will have to do a quick `brew install wget`).
+So now that we know you can run a shell within a Docker container let's have some fun with it. Here is a simple script that will generate all the information for a StarWars character, try running it in your terminal. (If you run into an error for `wget missing` you will have to do a quick `brew install wget`).
 
 ```ssh
 while :
 do
-    wget -qO- http://quotesondesign.com/wp-json/posts
+    wget -qO- https://swapi.co/api/people/?search=r2
     printf '\n'
     sleep 5s
 done
@@ -144,7 +144,7 @@ Let's get to it:
    - The command you'll hand to the alpine image will look like this:
 
 ```ssh
-/bin/sh -c "while :; do wget -qO- http://quotesondesign.com/wp-json/posts; printf '\n'; sleep 5s; done"
+/bin/sh -c "while :; do wget -qO- https://swapi.co/api/people/?search=r2; printf '\n'; sleep 5s; done"
 ```
 
 Once you've successfully run your container it'll be happily chugging along in the background. But, in the background you won't be able to see the output of that container. Let's utilize the `docker container inspect <containernameORcontainerID>`. This command will allow you to see what that container is running. Check your logs a few more times and you'll see your script doing it's thing!
